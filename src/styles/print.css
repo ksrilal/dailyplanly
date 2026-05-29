@@ -1,4 +1,9 @@
 @media print {
+  /* ─── Show ONLY the print view for checklists ─── */
+  .checklist-print-only {
+    display: block !important;
+  }
+
   /* ─── Hide ALL UI chrome ─── */
   header, nav, footer,
   .no-print,
@@ -13,8 +18,20 @@
   [aria-label="Filter checklist items"],
   [aria-label="Add item"],
   [placeholder="Search tasks…"],
-  button:not(.print-visible) {
+  button:not(.print-visible),
+  /* Checklist UI — hide everything except the print view */
+  .checklist-item,
+  .checklist-bg-animation,
+  canvas {
     display: none !important;
+  }
+
+  /* Hide the entire normal content area when printing a checklist */
+  body:has(.checklist-print-only) > * {
+    display: none !important;
+  }
+  body:has(.checklist-print-only) .checklist-print-only {
+    display: block !important;
   }
 
   /* ─── Page ─── */

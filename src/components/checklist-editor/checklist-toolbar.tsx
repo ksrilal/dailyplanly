@@ -70,21 +70,23 @@ export function ChecklistToolbar({ onExport, onClear }: ChecklistToolbarProps) {
       <div className="flex items-center gap-1.5 flex-shrink-0">
         <AutosaveIndicator status={saveStatus} />
 
-        <div className="w-px h-4 bg-[var(--border)]" />
-
-        <button
-          onClick={() => onExport?.('print')}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors"
-        >
-          <Printer className="h-3.5 w-3.5" /> Print
-        </button>
-
-        <button
-          onClick={() => onExport?.('pdf')}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--color-accent)] text-white text-xs font-semibold hover:bg-violet-700 transition-colors shadow-sm shadow-violet-500/20"
-        >
-          <Download className="h-3.5 w-3.5" /> Export PDF
-        </button>
+        {hasItems && (
+          <>
+            <div className="w-px h-4 bg-[var(--border)]" />
+            <button
+              onClick={() => onExport?.('print')}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors"
+            >
+              <Printer className="h-3.5 w-3.5" /> Print
+            </button>
+            <button
+              onClick={() => onExport?.('pdf')}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--color-accent)] text-white text-xs font-semibold hover:bg-violet-700 transition-colors shadow-sm shadow-violet-500/20"
+            >
+              <Download className="h-3.5 w-3.5" /> Export PDF
+            </button>
+          </>
+        )}
 
         {hasItems && onClear && (
           <>

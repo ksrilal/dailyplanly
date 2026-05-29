@@ -68,7 +68,8 @@ export function exportChecklistToText(checklist: Checklist): void {
       .sort((a, b) => a.order - b.order)
       .map((i) => {
         const prefix = '  '.repeat(depth) + (i.checked ? '[x]' : '[ ]')
-        return `${prefix} ${i.text}${renderItem(items, i.id, depth + 1) ? '\n' + renderItem(items, i.id, depth + 1) : ''}`
+        const children = renderItem(items, i.id, depth + 1)
+        return `${prefix} ${i.text}${children ? '\n' + children : ''}`
       })
       .join('\n')
   }

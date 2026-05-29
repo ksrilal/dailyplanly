@@ -112,10 +112,16 @@ function SimplePreview({ visible }: { visible: boolean }) {
 // ─── Advanced preview ─────────────────────────────────────────────────────────
 
 function AdvancedPreview({ visible }: { visible: boolean }) {
-  const leaves = ADVANCED_ITEMS.filter(i => !ADVANCED_ITEMS.some(j => j.depth > i.depth && ADVANCED_ITEMS.indexOf(j) > ADVANCED_ITEMS.indexOf(i) && j.depth === i.depth + 1))
-  const checked = ADVANCED_ITEMS.filter(i => i.status === 'checked').length
-  const total = ADVANCED_ITEMS.length
-  const pct = Math.round((checked / total) * 100)
+  // A leaf is an item whose immediate next sibling/item doesn't go deeper than it.
+  // In a sequential flat depth array: item i is a leaf if the item at i+1
+  // has depth <= item[i].depth (or i is the last item).
+  const leafItems = ADVANCED_ITEMS.filter((item, idx) => {
+    const next = ADVANCED_ITEMS[idx + 1]
+    return !next || next.depth <= item.depth
+  })
+  const checked = leafItems.filter(i => i.status === 'checked').length
+  const total = leafItems.length
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0
 
   return (
     <div className="flex flex-col gap-0 w-full max-w-sm">

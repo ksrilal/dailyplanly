@@ -10,7 +10,7 @@ import { removeFromRecents } from '@/features/storage/recents'
 import { formatRelativeDate } from '@/lib/utils'
 import { computeProgress } from '@/features/checklist/tree-ops'
 import type { Planner, Checklist } from '@/features/storage/types'
-import { Trash2, X, LayoutTemplate, CheckSquare, List, Pin, Search, Clock, Calendar, ArrowUpAZ, PinIcon, Star } from 'lucide-react'
+import { Trash2, X, LayoutTemplate, CheckSquare, List, Pin, Search, Clock, Calendar, ArrowUpAZ, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,7 +20,20 @@ type AnyWorkspace = (Planner | Checklist) & {
   pinned?: boolean
 }
 
-type SortKey = 'modified' | 'created' | 'alpha' | 'pinned'
+type SortKey = 'modified' | 'created' | 'alpha'
+
+const PINS_KEY = 'dp:workspace-pins'
+
+function loadPins(): Set<string> {
+  try {
+    const raw = localStorage.getItem(PINS_KEY)
+    return raw ? new Set(JSON.parse(raw) as string[]) : new Set()
+  } catch { return new Set() }
+}
+
+function savePins(ids: Set<string>) {
+  try { localStorage.setItem(PINS_KEY, JSON.stringify([...ids])) } catch {}
+}
 
 const CONFIRM_DURATION = 5
 
@@ -115,7 +128,7 @@ function WorkspaceRow({
 
       {/* Left: title + meta */}
       <Link href={href} className="flex-1 min-w-0">
-        <p className="font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-accent)] transition-colors">
+        <p className="font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--color-accent)] transition-colors" title={ws.title}>
           {ws.title}
         </p>
         <div className="flex items-center gap-3 mt-0.5">
@@ -209,7 +222,6 @@ const SORT_OPTIONS: { key: SortKey; label: string; icon: React.ComponentType<{ c
   { key: 'modified', label: 'Last modified', icon: Clock },
   { key: 'created',  label: 'Date created',  icon: Calendar },
   { key: 'alpha',    label: 'Alphabetical',   icon: ArrowUpAZ },
-  { key: 'pinned',   label: 'Pinned first',   icon: PinIcon },
 ]
 
 export default function WorkspacePage() {
@@ -218,6 +230,11 @@ export default function WorkspacePage() {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortKey>('modified')
   const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set())
+
+  // Load pins from localStorage on mount
+  useEffect(() => {
+    setPinnedIds(loadPins())
+  }, [])
 
   async function load() {
     const [planners, checklists] = await Promise.all([getAllPlanners(), getAllChecklists()])
@@ -246,6 +263,7 @@ export default function WorkspacePage() {
     setPinnedIds((prev) => {
       const next = new Set(prev)
       next.has(id) ? next.delete(id) : next.add(id)
+      savePins(next)
       return next
     })
   }
@@ -265,22 +283,19 @@ export default function WorkspacePage() {
       result = result.filter((w) => w.title.toLowerCase().includes(q))
     }
 
-    result.sort((a, b) => {
-      if (sort === 'pinned') {
-        if (a.pinned !== b.pinned) return a.pinned ? -1 : 1
+    function applySort(items: typeof result) {
+      return [...items].sort((a, b) => {
+        if (sort === 'alpha') return a.title.localeCompare(b.title)
+        if (sort === 'created') return b.createdAt.localeCompare(a.createdAt)
+        // default: modified
         return b.lastModifiedAt.localeCompare(a.lastModifiedAt)
-      }
-      if (sort === 'alpha') return a.title.localeCompare(b.title)
-      if (sort === 'created') return b.createdAt.localeCompare(a.createdAt)
-      return b.lastModifiedAt.localeCompare(a.lastModifiedAt)
-    })
-
-    // Pinned always float to top regardless of sort
-    if (sort !== 'pinned') {
-      result = [...result.filter((w) => w.pinned), ...result.filter((w) => !w.pinned)]
+      })
     }
 
-    return result
+    // Pinned always at top (sorted among themselves), unpinned sorted below
+    const pinned = applySort(result.filter((w) => w.pinned))
+    const unpinned = applySort(result.filter((w) => !w.pinned))
+    return [...pinned, ...unpinned]
   }, [workspaces, search, sort, pinnedIds])
 
   const plannerCount = workspaces.filter((w) => w.workspaceType === 'planner').length

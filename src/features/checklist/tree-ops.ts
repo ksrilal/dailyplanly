@@ -143,6 +143,8 @@ export function addItemAfter(items: ChecklistItem[], siblingId: string | null, p
 }
 
 export function addChildItem(items: ChecklistItem[], parentId: string): ChecklistItem[] {
+  // Enforce max depth
+  if (getDepth(items, parentId) >= MAX_DEPTH) return items
   const existingChildren = getChildren(items, parentId)
   const newItem: ChecklistItem = {
     id: generateId(),
@@ -209,17 +211,68 @@ export function outdentItem(items: ChecklistItem[], id: string): ChecklistItem[]
   const parent = items.find((i) => i.id === item.parentId)
   if (!parent) return items
 
+  // Siblings in the new parent group — shift those after parent down by 1
+  const newOrder = parent.order + 1
   const result = items.map((i) => {
-    if (i.id === id) return { ...i, parentId: parent.parentId, order: parent.order + 1 }
-    if (i.parentId === parent.parentId && i.order > parent.order) return { ...i, order: i.order + 1 }
+    if (i.id === id) return { ...i, parentId: parent.parentId, order: newOrder }
+    // Shift existing siblings at same level that come after parent
+    if (i.id !== item.id && i.parentId === parent.parentId && i.order >= newOrder) {
+      return { ...i, order: i.order + 1 }
+    }
     return i
   })
   return propagateUp(result)
 }
 
+/**
+ * Reorder an item within its sibling group.
+ * `overId` is the ID of the sibling it's being dropped onto.
+ * Normalises all sibling orders to 0,1,2,… then re-applies after swap.
+ */
+export function reorderItem(items: ChecklistItem[], activeId: string, overId: string): ChecklistItem[] {
+  const active = items.find((i) => i.id === activeId)
+  const over = items.find((i) => i.id === overId)
+  if (!active || !over || active.parentId !== over.parentId) return items
+
+  // Get sorted siblings
+  const parentId = active.parentId
+  const siblings = items
+    .filter((i) => i.parentId === parentId)
+    .sort((a, b) => a.order - b.order)
+
+  const fromIdx = siblings.findIndex((s) => s.id === activeId)
+  const toIdx = siblings.findIndex((s) => s.id === overId)
+  if (fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return items
+
+  // Move in the array
+  const reordered = [...siblings]
+  const [moved] = reordered.splice(fromIdx, 1)
+  reordered.splice(toIdx, 0, moved)
+
+  // Write back normalised order values
+  const orderMap = new Map(reordered.map((s, idx) => [s.id, idx]))
+  const result = items.map((i) =>
+    orderMap.has(i.id) ? { ...i, order: orderMap.get(i.id)! } : i
+  )
+
+  return propagateUp(result)
+}
+
+/** Legacy – kept for outdent/indent internal use */
 export function moveItem(items: ChecklistItem[], id: string, newIndex: number, newParentId: string | null): ChecklistItem[] {
+  const item = items.find((i) => i.id === id)
+  if (!item) return items
+
+  const siblings = items
+    .filter((i) => i.parentId === newParentId && i.id !== id)
+    .sort((a, b) => a.order - b.order)
+
+  // Insert at newIndex and normalise
+  siblings.splice(newIndex, 0, { ...item, parentId: newParentId })
   const result = items.map((i) => {
-    if (i.id === id) return { ...i, parentId: newParentId, order: newIndex }
+    const idx = siblings.findIndex((s) => s.id === i.id)
+    if (idx !== -1) return { ...i, parentId: newParentId, order: idx }
+    // Remove from old group — shift is implicit since we rebuild
     return i
   })
   return propagateUp(result)
@@ -236,7 +289,6 @@ export function computeProgress(items: ChecklistItem[]): ChecklistProgress {
   const leaves = items.filter((i) => !items.some((c) => c.parentId === i.id))
   const total = leaves.length
   const completed = leaves.filter((i) => (i.status ?? (i.checked ? 'checked' : 'unchecked')) === 'checked').length
-  const invalid = leaves.filter((i) => (i.status ?? 'unchecked') === 'invalid').length
   return {
     total,
     completed,
@@ -249,5 +301,33 @@ export function computeProgress(items: ChecklistItem[]): ChecklistProgress {
 export function filterItems(items: ChecklistItem[], query: string): string[] {
   if (!query.trim()) return items.map((i) => i.id)
   const q = query.toLowerCase()
-  return items.filter((i) => i.text.toLowerCase().includes(q)).map((i) => i.id)
+
+  // Direct matches
+  const directMatches = new Set(
+    items.filter((i) => i.text.toLowerCase().includes(q)).map((i) => i.id)
+  )
+
+  const visible = new Set<string>()
+
+  for (const id of directMatches) {
+    visible.add(id)
+
+    // Include all ancestors so the tree path is visible
+    let current = items.find((i) => i.id === id)
+    while (current?.parentId) {
+      visible.add(current.parentId)
+      current = items.find((i) => i.id === current!.parentId)
+    }
+
+    // Include all descendants so context is shown
+    const addDescendants = (parentId: string) => {
+      for (const child of getChildren(items, parentId)) {
+        visible.add(child.id)
+        addDescendants(child.id)
+      }
+    }
+    addDescendants(id)
+  }
+
+  return items.filter((i) => visible.has(i.id)).map((i) => i.id)
 }

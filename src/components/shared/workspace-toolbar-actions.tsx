@@ -39,7 +39,10 @@ export function WorkspaceTitleEdit({ title, onSave }: WorkspaceTitleEditProps) {
         />
       ) : (
         <>
-          <span className="text-sm font-semibold text-[var(--text-primary)] max-w-[200px] truncate">
+          <span
+            className="text-sm font-semibold text-[var(--text-primary)] max-w-[200px] truncate cursor-default"
+            title={title}
+          >
             {title}
           </span>
           <button

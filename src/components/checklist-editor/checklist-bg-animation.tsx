@@ -38,11 +38,11 @@ function drawBox(ctx: CanvasRenderingContext2D, box: Box, col: { x: number; w: n
   ctx.globalAlpha = box.opacity
 
   // Glow
-  ctx.shadowColor = `rgba(${r},${g},${b},0.6)`
-  ctx.shadowBlur = 8
+  ctx.shadowColor = `rgba(${r},${g},${b},0.25)`
+  ctx.shadowBlur = 5
 
   // Box border
-  ctx.strokeStyle = `rgba(${r},${g},${b},0.9)`
+  ctx.strokeStyle = `rgba(${r},${g},${b},0.5)`
   ctx.lineWidth = 1.5
   ctx.beginPath()
   ctx.roundRect(cx - s / 2, cy - s / 2, s, s, 3)
@@ -157,7 +157,7 @@ export function ChecklistBgAnimation() {
       const side = i % 2 === 0 ? 'left' : 'right'
       const b = spawnBox(side)
       b.y = Math.random() * 0.7
-      b.opacity = Math.random() * 0.35
+      b.opacity = Math.random() * 0.18
       b.phase = 'marking'
       b.markProgress = Math.random()
       boxesRef.current.push(b)
@@ -192,7 +192,7 @@ export function ChecklistBgAnimation() {
         box.phaseTimer -= dt
 
         if (box.phase === 'appearing') {
-          box.opacity = Math.min(0.55, box.opacity + dt * 1.2)
+          box.opacity = Math.min(0.3, box.opacity + dt * 0.8)
           if (box.phaseTimer <= 0) {
             box.phase = 'marking'
             box.phaseTimer = 1.0 + Math.random() * 1.5
@@ -234,6 +234,7 @@ export function ChecklistBgAnimation() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.25 }}
       aria-hidden="true"
     />
   )

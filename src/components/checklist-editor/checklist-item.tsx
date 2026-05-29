@@ -5,19 +5,58 @@ import {
   ChevronDown, ChevronRight, GripVertical, Trash2, Copy, X,
   Pencil, Plus, ArrowRight, ArrowLeft,
 } from 'lucide-react'
+import {
+  SortableContext, verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useChecklistEditor } from '@/features/checklist/editor-state'
 import { getChildren, getPrevSibling, isFirstAmongSiblings, MAX_DEPTH } from '@/features/checklist/tree-ops'
 import { cn } from '@/lib/utils'
 import type { ChecklistItem as Item, ChecklistItemStatus } from '@/features/storage/types'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 
-interface ChecklistItemProps {
-  item: Item
-  depth?: number
+// ─── Re-export the group wrapper used by checklist-layout ────────────────────
+
+interface ChecklistGroupProps {
+  parentId: string | null
   allItems: Item[]
+  depth?: number
   filteredIds?: string[]
 }
+
+/**
+ * Renders a group of sibling items at the same parent level,
+ * each wrapped in their own SortableContext so drag-and-drop
+ * stays within the same sibling group.
+ */
+export function ChecklistItemGroup({ parentId, allItems, depth = 0, filteredIds }: ChecklistGroupProps) {
+  const siblings = allItems
+    .filter((i) => i.parentId === parentId)
+    .sort((a, b) => a.order - b.order)
+
+  if (siblings.length === 0) return null
+
+  const siblingIds = siblings.map((s) => s.id)
+
+  return (
+    <SortableContext items={siblingIds} strategy={verticalListSortingStrategy}>
+      {siblings.map((item) => {
+        if (filteredIds && !filteredIds.includes(item.id)) return null
+        return (
+          <ChecklistItemRow
+            key={item.id}
+            item={item}
+            depth={depth}
+            allItems={allItems}
+            filteredIds={filteredIds}
+          />
+        )
+      })}
+    </SortableContext>
+  )
+}
+
+// ─── Status button ────────────────────────────────────────────────────────────
 
 function StatusButton({ item }: { item: Item }) {
   const cycleStatus = useChecklistEditor((s) => s.cycleStatus)
@@ -41,6 +80,44 @@ function StatusButton({ item }: { item: Item }) {
       {status === 'invalid' && <X className="h-3 w-3 text-red-400" strokeWidth={2.5} />}
     </button>
   )
+}
+
+// ─── Action button helper ─────────────────────────────────────────────────────
+
+function ActionBtn({
+  onClick, icon: Icon, title, enabled = true, danger = false, accent = false,
+}: {
+  onClick: () => void
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
+  title: string
+  enabled?: boolean
+  danger?: boolean
+  accent?: boolean
+}) {
+  return (
+    <button
+      onClick={enabled ? onClick : undefined}
+      title={title}
+      className={cn(
+        'flex items-center justify-center w-7 h-7 rounded-md transition-all duration-100 cursor-pointer',
+        enabled && !danger && !accent && 'text-[var(--text-faint)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-page)]',
+        enabled && danger && 'text-[var(--text-faint)] hover:text-red-400 hover:bg-red-500/10',
+        enabled && accent && 'text-[var(--text-faint)] hover:text-emerald-400 hover:bg-emerald-500/10',
+        !enabled && 'text-[var(--text-faint)]/20 cursor-not-allowed',
+      )}
+    >
+      <Icon className="h-3.5 w-3.5" strokeWidth={2} />
+    </button>
+  )
+}
+
+// ─── Row ──────────────────────────────────────────────────────────────────────
+
+interface ChecklistItemProps {
+  item: Item
+  depth?: number
+  allItems: Item[]
+  filteredIds?: string[]
 }
 
 function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistItemProps) {
@@ -72,8 +149,6 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
     if (editing) { editRef.current?.focus(); editRef.current?.select() }
   }, [editing])
 
-  if (filteredIds && !filteredIds.includes(item.id)) return null
-
   const style = { transform: CSS.Transform.toString(transform), transition }
   const status: ChecklistItemStatus = item.status ?? (item.checked ? 'checked' : 'unchecked')
   const isAdvanced = mode === 'advanced'
@@ -92,28 +167,8 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
     try { await navigator.clipboard.writeText(item.text) } catch {}
   }
 
-  const ActionBtn = ({
-    onClick, icon: Icon, title, enabled = true, danger = false, accent = false
-  }: {
-    onClick: () => void; icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
-    title: string; enabled?: boolean; danger?: boolean; accent?: boolean
-  }) => (
-    <button
-      onClick={enabled ? onClick : undefined}
-      title={title}
-      className={cn(
-        'flex items-center justify-center w-7 h-7 rounded-md transition-all duration-100 cursor-pointer',
-        enabled && !danger && !accent && 'text-[var(--text-faint)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-page)]',
-        enabled && danger && 'text-[var(--text-faint)] hover:text-red-400 hover:bg-red-500/10 cursor-pointer',
-        enabled && accent && 'text-[var(--text-faint)] hover:text-emerald-400 hover:bg-emerald-500/10 cursor-pointer',
-        !enabled && 'text-[var(--text-faint)]/20 cursor-not-allowed',
-      )}
-    >
-      <Icon className="h-3.5 w-3.5" strokeWidth={2} />
-    </button>
-  )
-
   return (
+    // setNodeRef on the outer wrapper so the entire row + its children move together
     <div ref={setNodeRef} style={{ ...style, opacity: isDragging ? 0.4 : 1 }}>
       <div
         className={cn(
@@ -122,11 +177,12 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
         )}
         style={{ paddingLeft: `${10 + depth * 24}px` }}
       >
-        {/* Drag handle */}
+        {/* Drag handle — only activates drag, doesn't move children */}
         <div
           {...attributes}
           {...listeners}
           className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-[var(--text-faint)] hover:text-[var(--text-muted)]"
+          title="Drag to reorder within same level"
         >
           <GripVertical className="h-4 w-4" />
         </div>
@@ -144,7 +200,7 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
         {/* Status checkbox */}
         <StatusButton item={item} />
 
-        {/* Text — view (double-click) or edit mode */}
+        {/* Text */}
         <div className="flex-1 min-w-0">
           {editing ? (
             <input
@@ -167,8 +223,11 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
               onKeyDown={(e) => {
                 if (e.key === 'Enter') { e.preventDefault(); addItem(item.id) }
                 if (e.key === 'Backspace' && item.text === '') { e.preventDefault(); removeItem(item.id) }
-                if (e.key === 'Tab' && !e.shiftKey && canIndent) { e.preventDefault(); indentItem(item.id) }
-                if (e.key === 'Tab' && e.shiftKey && canOutdent) { e.preventDefault(); outdentItem(item.id) }
+                if (e.key === 'Tab') {
+                  e.preventDefault()
+                  if (!e.shiftKey && canIndent) indentItem(item.id)
+                  else if (e.shiftKey && canOutdent) outdentItem(item.id)
+                }
               }}
               className={cn(
                 'block w-full text-sm font-medium py-0.5 focus:outline-none cursor-text select-none',
@@ -183,7 +242,7 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
           )}
         </div>
 
-        {/* Actions — shown on hover, hidden in edit mode */}
+        {/* Actions */}
         {!editing && (
           <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
             {isAdvanced && (
@@ -204,13 +263,14 @@ function ChecklistItemRow({ item, depth = 0, allItems, filteredIds }: ChecklistI
         )}
       </div>
 
-      {/* Children */}
+      {/* Children — each level gets its own SortableContext */}
       {!item.collapsed && hasChildren && (
-        <div>
-          {children.map((child) => (
-            <ChecklistItemRow key={child.id} item={child} depth={depth + 1} allItems={allItems} filteredIds={filteredIds} />
-          ))}
-        </div>
+        <ChecklistItemGroup
+          parentId={item.id}
+          allItems={allItems}
+          depth={depth + 1}
+          filteredIds={filteredIds}
+        />
       )}
     </div>
   )

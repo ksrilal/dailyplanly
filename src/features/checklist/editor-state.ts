@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { getChecklist, saveChecklist } from './checklist-store'
 import {
   addItemAfter, addChildItem as addChildItemOp, removeItem, cycleItemStatus,
-  indentItem, outdentItem, moveItem, toggleCollapse,
+  indentItem, outdentItem, moveItem, reorderItem, toggleCollapse,
   computeProgress, filterItems, getRoots,
 } from './tree-ops'
 import type { Checklist, ChecklistProgress } from '@/features/storage/types'
@@ -17,6 +17,7 @@ interface ChecklistEditorState {
 
   loadChecklist: (id: string) => Promise<void>
   addItem: (afterId: string | null) => void
+  addItemWithText: (text: string, afterId: string | null) => void
   addChildItem: (parentId: string) => void
   removeItem: (id: string) => void
   updateItemText: (id: string, text: string) => void
@@ -25,6 +26,7 @@ interface ChecklistEditorState {
   indentItem: (id: string) => void
   outdentItem: (id: string) => void
   moveItem: (id: string, newIndex: number, newParentId: string | null) => void
+  reorderItem: (activeId: string, overId: string) => void
   toggleCollapse: (id: string) => void
   setFilterQuery: (query: string) => void
   clearAll: () => void
@@ -63,10 +65,26 @@ export const useChecklistEditor = create<ChecklistEditorState>((set, get) => ({
     })
   },
 
+  addItemWithText(text, afterId) {
+    const { checklist } = get()
+    if (!checklist || !text.trim()) return
+    const sibling = afterId ? checklist.items.find((i) => i.id === afterId) : null
+    const parentId = sibling?.parentId ?? null
+    const newItems = addItemAfter(checklist.items, afterId, parentId)
+    const newItem = newItems.find((i) => !checklist.items.some((old) => old.id === i.id))
+    if (newItem) {
+      const withText = newItems.map((i) => i.id === newItem.id ? { ...i, text: text.trim() } : i)
+      set({
+        checklist: { ...checklist, items: withText, lastModifiedAt: now() },
+        focusedItemId: newItem.id,
+        isDirty: true,
+      })
+    }
+  },
+
   addChildItem(parentId) {
     const { checklist } = get()
     if (!checklist) return
-    const before = checklist.items.length
     const newItems = addChildItemOp(checklist.items, parentId)
     const newItem = newItems.find((i) => !checklist.items.some((old) => old.id === i.id))
     set({
@@ -77,10 +95,11 @@ export const useChecklistEditor = create<ChecklistEditorState>((set, get) => ({
   },
 
   removeItem(id) {
-    const { checklist } = get()
+    const { checklist, focusedItemId } = get()
     if (!checklist) return
     set({
       checklist: { ...checklist, items: removeItem(checklist.items, id), lastModifiedAt: now() },
+      focusedItemId: focusedItemId === id ? null : focusedItemId,
       isDirty: true,
     })
   },
@@ -141,10 +160,19 @@ export const useChecklistEditor = create<ChecklistEditorState>((set, get) => ({
     })
   },
 
+  reorderItem(activeId, overId) {
+    const { checklist } = get()
+    if (!checklist) return
+    set({
+      checklist: { ...checklist, items: reorderItem(checklist.items, activeId, overId), lastModifiedAt: now() },
+      isDirty: true,
+    })
+  },
+
   toggleCollapse(id) {
     const { checklist } = get()
     if (!checklist) return
-    set({ checklist: { ...checklist, items: toggleCollapse(checklist.items, id) } })
+    set({ checklist: { ...checklist, items: toggleCollapse(checklist.items, id), lastModifiedAt: now() }, isDirty: true })
   },
 
   clearAll() {

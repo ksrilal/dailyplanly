@@ -1,5 +1,5 @@
 import React from 'react'
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, Svg, Path, Line } from '@react-pdf/renderer'
 import type { Checklist, ChecklistItem, ExportConfig, ChecklistItemStatus } from '@/features/storage/types'
 import { computeProgress } from '@/features/checklist/tree-ops'
 
@@ -65,14 +65,26 @@ function renderItems(items: ChecklistItem[], parentId: string | null = null, dep
 
       const row = (
         <View key={item.id} style={{ ...styles.itemRow, paddingLeft: indent }}>
-          {/* Status box */}
+          {/* Checkbox drawn with SVG — reliable in @react-pdf/renderer */}
           {status === 'checked' ? (
             <View style={styles.checkboxChecked}>
-              <Text style={styles.checkmark}>✓</Text>
+              <Svg width={8} height={8} viewBox="0 0 10 10">
+                <Path
+                  d="M1.5 5 L4 7.5 L8.5 2"
+                  stroke="white"
+                  strokeWidth={1.8}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </Svg>
             </View>
           ) : status === 'invalid' ? (
             <View style={styles.checkboxInvalid}>
-              <Text style={styles.xmark}>✕</Text>
+              <Svg width={8} height={8} viewBox="0 0 10 10">
+                <Line x1={2} y1={2} x2={8} y2={8} stroke={C.red} strokeWidth={1.8} strokeLinecap="round" />
+                <Line x1={8} y1={2} x2={2} y2={8} stroke={C.red} strokeWidth={1.8} strokeLinecap="round" />
+              </Svg>
             </View>
           ) : (
             <View style={styles.checkbox} />
@@ -101,7 +113,6 @@ interface ChecklistPdfDocumentProps {
 
 export function ChecklistPdfDocument({ checklist, config }: ChecklistPdfDocumentProps) {
   const progress = computeProgress(checklist.items)
-  const pct = progress.total > 0 ? progress.percentage / 100 : 0
   const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
@@ -111,12 +122,9 @@ export function ChecklistPdfDocument({ checklist, config }: ChecklistPdfDocument
         orientation={config.orientation}
         style={styles.page}
       >
-        {/* Header */}
+        {/* Header — title only */}
         <View style={styles.header}>
           <Text style={styles.title}>{checklist.title}</Text>
-          <Text style={styles.subtitle}>
-            {checklist.mode.toUpperCase()} CHECKLIST · {now}
-          </Text>
         </View>
 
         <View style={styles.divider} />
@@ -125,8 +133,10 @@ export function ChecklistPdfDocument({ checklist, config }: ChecklistPdfDocument
         {progress.total > 0 && (
           <View style={styles.progressRow}>
             <Text style={styles.progressLabel}>{progress.completed}/{progress.total} done</Text>
+            {/* Use flexGrow ratio for the fill — works reliably in @react-pdf/renderer */}
             <View style={styles.progressTrack}>
-              <View style={{ ...styles.progressFill, width: `${progress.percentage}%` }} />
+              <View style={{ ...styles.progressFill, flexGrow: progress.percentage, maxWidth: `${progress.percentage}%` }} />
+              <View style={{ flexGrow: 100 - progress.percentage, backgroundColor: 'transparent' }} />
             </View>
             <Text style={styles.progressPct}>{progress.percentage}%</Text>
           </View>
@@ -135,12 +145,6 @@ export function ChecklistPdfDocument({ checklist, config }: ChecklistPdfDocument
         {/* Items */}
         <View>{renderItems(checklist.items)}</View>
 
-        {/* Footer */}
-        <View style={{ position: 'absolute', bottom: '12mm', left: '16mm', right: '16mm', borderTop: `0.5pt solid ${C.faint}`, paddingTop: 5 }}>
-          <Text style={{ fontSize: 7.5, color: C.muted, textAlign: 'center' }}>
-            DailyPlanly · Exported {now}
-          </Text>
-        </View>
       </Page>
     </Document>
   )

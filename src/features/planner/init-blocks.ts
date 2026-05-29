@@ -1,6 +1,7 @@
 // Import all block modules to trigger their BlockRegistry.register() calls.
 // This file must be imported once before the editor renders.
 import './blocks/calendar'
+import './blocks/calendar-notes'
 import './blocks/table'
 import './blocks/habit-tracker'
 import './blocks/timeline'

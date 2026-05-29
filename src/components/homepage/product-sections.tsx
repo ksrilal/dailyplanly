@@ -11,16 +11,16 @@ const features = {
   planner: [
     'Block-based visual layout',
     'Drag-and-drop section ordering',
-    '9 block types: calendar, habits, goals, and more',
+    '10 block types: calendar, habits, goals, and more',
     '5 beautiful themes',
-    'Export to PDF, PNG, or print',
+    'Export to PDF or print',
   ],
   checklist: [
     'Simple flat lists and nested hierarchies',
     'Progress tracking with visual bar',
     'Collapsible sections in Advanced mode',
     'Drag-to-reorder items',
-    'Export to PDF or plain text',
+    'Export to PDF or print',
   ],
 }
 

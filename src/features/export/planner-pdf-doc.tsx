@@ -2,6 +2,7 @@ import React from 'react'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type {
   Planner, ExportConfig, PlannerBlock,
+  CalendarNotesContent, CalendarNote,
   FocusContent, NotesContent, RoutineContent, GoalContent,
   HabitTrackerContent, CalendarContent, TableContent,
   TimelineContent, DashboardCardContent,
@@ -191,6 +192,67 @@ function DashboardCardBlock({ block }: { block: PlannerBlock }) {
   )
 }
 
+function CalendarNotesBlock({ block }: { block: PlannerBlock }) {
+  const c = block.content as CalendarNotesContent
+  const now = new Date()
+  const year = c.year ?? now.getFullYear()
+  const month = c.month ? c.month - 1 : now.getMonth()
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  const DAYS = ['Mo','Tu','We','Th','Fr','Sa','Su']
+  const firstDay = new Date(year, month, 1).getDay()
+  const startOffset = (firstDay + 6) % 7
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const cells: (number | null)[] = Array(startOffset).fill(null)
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d)
+  while (cells.length % 7 !== 0) cells.push(null)
+  const notes = c.notes ?? {}
+
+  const notePalette: Record<CalendarNote['color'], string> = {
+    yellow: '#fef08a', pink: '#fbcfe8', blue: '#bfdbfe',
+    green: '#bbf7d0', purple: '#ddd6fe', orange: '#fed7aa',
+  }
+  const noteAccent: Record<CalendarNote['color'], string> = {
+    yellow: '#ca8a04', pink: '#db2777', blue: '#2563eb',
+    green: '#16a34a', purple: '#7c3aed', orange: '#ea580c',
+  }
+
+  const rows = Array.from({ length: cells.length / 7 }, (_, r) => cells.slice(r * 7, r * 7 + 7))
+
+  return (
+    <View style={styles.block}>
+      {block.label && <Text style={styles.blockLabel}>{block.label}</Text>}
+      <Text style={{ ...styles.bold, textAlign: 'center', marginBottom: 6 }}>{MONTHS[month]} {year}</Text>
+      {/* Day headers */}
+      <View style={{ flexDirection: 'row', marginBottom: 3, borderBottom: `1pt solid ${C.faint}` }}>
+        {DAYS.map((d) => <Text key={d} style={{ flex: 1, fontSize: 7, color: C.muted, textAlign: 'center' }}>{d}</Text>)}
+      </View>
+      {/* Weeks */}
+      {rows.map((week, ri) => (
+        <View key={ri} style={{ flexDirection: 'row', borderBottom: `0.5pt solid ${C.faint}` }}>
+          {week.map((day, ci) => {
+            const dayNotes = day ? (notes[day] ?? []) : []
+            return (
+              <View key={ci} style={{ flex: 1, minHeight: 32, padding: '1pt', borderRight: ci < 6 ? `0.5pt solid ${C.faint}` : 'none' }}>
+                {day && (
+                  <>
+                    <Text style={{ fontSize: 7, fontWeight: 'bold', color: C.ink, marginBottom: 1 }}>{day}</Text>
+                    {dayNotes.slice(0, 3).map((note) => (
+                      <View key={note.id} style={{ backgroundColor: notePalette[note.color], borderLeft: `2pt solid ${noteAccent[note.color]}`, paddingHorizontal: 2, paddingVertical: 1, marginBottom: 1, borderRadius: 1.5 }}>
+                        <Text style={{ fontSize: 5.5, color: '#111', lineHeight: 1.3 }}>{note.text.slice(0, 60)}</Text>
+                      </View>
+                    ))}
+                    {dayNotes.length > 3 && <Text style={{ fontSize: 5, color: C.muted }}>+{dayNotes.length - 3}</Text>}
+                  </>
+                )}
+              </View>
+            )
+          })}
+        </View>
+      ))}
+    </View>
+  )
+}
+
 function BlockView({ block }: { block: PlannerBlock }) {
   switch (block.type) {
     case 'notes':          return <NotesBlock block={block} />
@@ -199,6 +261,7 @@ function BlockView({ block }: { block: PlannerBlock }) {
     case 'goal':           return <GoalBlock block={block} />
     case 'habit-tracker':  return <HabitBlock block={block} />
     case 'calendar':       return <CalendarBlock block={block} />
+    case 'calendar-notes': return <CalendarNotesBlock block={block} />
     case 'table':          return <TableBlock block={block} />
     case 'timeline':       return <TimelineBlock block={block} />
     case 'dashboard-card': return <DashboardCardBlock block={block} />

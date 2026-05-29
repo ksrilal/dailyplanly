@@ -11,6 +11,7 @@ export type PaperSize = 'A4' | 'Letter'
 
 export type PlannerBlockType =
   | 'calendar'
+  | 'calendar-notes'
   | 'table'
   | 'habit-tracker'
   | 'timeline'
@@ -25,6 +26,18 @@ export interface CalendarContent {
   year?: number
   showWeekNumbers: boolean
   highlightToday: boolean
+}
+
+export interface CalendarNote {
+  id: string
+  text: string
+  color: 'yellow' | 'pink' | 'blue' | 'green' | 'purple' | 'orange'
+}
+
+export interface CalendarNotesContent {
+  month?: number
+  year?: number
+  notes: Record<number, CalendarNote[]> // day number → notes array
 }
 
 export interface TableContent {
@@ -72,6 +85,7 @@ export interface DashboardCardContent {
 
 export type PlannerBlockContent =
   | CalendarContent
+  | CalendarNotesContent
   | TableContent
   | HabitTrackerContent
   | TimelineContent

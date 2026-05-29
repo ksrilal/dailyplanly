@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Trash2 } from 'lucide-react'
 import type { PlannerBlockContent } from '@/features/storage/types'
+import { CategoryIcon } from '../ui/category-icon'
 
 export function BlockSettings() {
   const planner = usePlannerEditor((s) => s.planner)
@@ -32,8 +33,9 @@ export function BlockSettings() {
   return (
     <div className="p-3 flex flex-col gap-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-faint)] mb-2">
-          {entry.icon} {entry.label}
+        <p className="mb-2 flex items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-[var(--text-faint)]">
+          <CategoryIcon name={entry.icon} className="h-4 w-4" />
+          <span>{entry.label}</span>
         </p>
         <Input
           label="Block label"

@@ -1,6 +1,6 @@
 import {
   Zap, Heart, TrendingUp, BookOpen, Sun, Home, Briefcase, MapPin,
-  CalendarDays, Table2, CheckSquare, GitCommitHorizontal,
+  CalendarDays, CalendarCheck2, Table2, CheckSquare, GitCommitHorizontal,
   StickyNote, Target, Clock, Focus, BarChart2,
   type LucideProps,
 } from 'lucide-react'
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 
 const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   Zap, Heart, TrendingUp, BookOpen, Sun, Home, Briefcase, MapPin,
-  CalendarDays, Table2, CheckSquare, GitCommitHorizontal,
+  CalendarDays, CalendarCheck2, Table2, CheckSquare, GitCommitHorizontal,
   StickyNote, Target, Clock, Focus, BarChart2,
 }
 

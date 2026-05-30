@@ -5,7 +5,7 @@ import { PLANNER_THEMES, PAPER_SIZES } from '@/lib/constants'
 import { THEME_MAP } from '@/features/planner/theme-tokens'
 import { AutosaveIndicator } from '@/components/ui/autosave-indicator'
 import { Button } from '@/components/ui/button'
-import { Printer, Download } from 'lucide-react'
+import { Printer, Download, RectangleVertical, RectangleHorizontal } from 'lucide-react'
 import type { PlannerTheme, PaperSize } from '@/features/storage/types'
 import { WorkspaceTitleEdit, WorkspaceClearButton } from '@/components/shared/workspace-toolbar-actions'
 import { cn } from '@/lib/utils'
@@ -28,6 +28,7 @@ export function PlannerToolbar({ onExport, onClear }: PlannerToolbarProps) {
   const saveStatus = usePlannerEditor((s) => s.saveStatus)
   const setTheme = usePlannerEditor((s) => s.setTheme)
   const setPaperSize = usePlannerEditor((s) => s.setPaperSize)
+  const setOrientation = usePlannerEditor((s) => s.setOrientation)
   const renameTitle = usePlannerEditor((s) => s.renameTitle)
 
   if (!planner) return (
@@ -59,6 +60,7 @@ export function PlannerToolbar({ onExport, onClear }: PlannerToolbarProps) {
         ))}
       </div>
       <div className="w-px h-4 bg-[var(--border)]" />
+      {/* Paper size: A4 / Letter */}
       <div className="flex items-center gap-1">
         {PAPER_SIZES.map((size) => (
           <button
@@ -70,6 +72,36 @@ export function PlannerToolbar({ onExport, onClear }: PlannerToolbarProps) {
             {size}
           </button>
         ))}
+      </div>
+      <div className="w-px h-4 bg-[var(--border)]" />
+      {/* Orientation: Portrait / Landscape */}
+      <div className="flex items-center gap-1" role="group" aria-label="Page orientation">
+        <button
+          onClick={() => setOrientation('portrait')}
+          aria-pressed={planner.orientation !== 'landscape'}
+          title="Portrait"
+          className={cn('flex items-center gap-1 px-2 py-0.5 rounded text-xs transition-colors',
+            planner.orientation !== 'landscape'
+              ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent)] font-medium'
+              : 'text-[var(--text-muted)] hover:bg-[var(--bg-subtle)]'
+          )}
+        >
+          <RectangleVertical className="h-3 w-3" strokeWidth={2} />
+          Portrait
+        </button>
+        <button
+          onClick={() => setOrientation('landscape')}
+          aria-pressed={planner.orientation === 'landscape'}
+          title="Landscape"
+          className={cn('flex items-center gap-1 px-2 py-0.5 rounded text-xs transition-colors',
+            planner.orientation === 'landscape'
+              ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent)] font-medium'
+              : 'text-[var(--text-muted)] hover:bg-[var(--bg-subtle)]'
+          )}
+        >
+          <RectangleHorizontal className="h-3 w-3" strokeWidth={2} />
+          Landscape
+        </button>
       </div>
       <div className="ml-auto flex items-center gap-2">
         <AutosaveIndicator status={saveStatus} />

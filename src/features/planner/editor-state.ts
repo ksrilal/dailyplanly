@@ -3,6 +3,8 @@ import { getPlanner, savePlanner } from './planner-store'
 import { BlockRegistry } from './block-registry'
 import { generateId } from '@/lib/utils'
 import type { Planner, PlannerBlock, PlannerBlockContent, PlannerBlockType, PlannerTheme, PaperSize } from '@/features/storage/types'
+
+type Orientation = 'portrait' | 'landscape'
 import type { SaveStatus } from '@/components/ui/autosave-indicator'
 
 interface PlannerEditorState {
@@ -18,6 +20,7 @@ interface PlannerEditorState {
   reorderBlocks: (newOrder: string[]) => void
   setTheme: (theme: PlannerTheme) => void
   setPaperSize: (size: PaperSize) => void
+  setOrientation: (orientation: Orientation) => void
   selectBlock: (id: string | null) => void
   renameBlock: (id: string, label: string) => void
   setBlockWidth: (id: string, width: 'full' | 'half') => void
@@ -107,6 +110,12 @@ export const usePlannerEditor = create<PlannerEditorState>((set, get) => ({
     const { planner } = get()
     if (!planner) return
     set({ planner: { ...planner, paperSize, lastModifiedAt: new Date().toISOString() }, isDirty: true })
+  },
+
+  setOrientation(orientation) {
+    const { planner } = get()
+    if (!planner) return
+    set({ planner: { ...planner, orientation, lastModifiedAt: new Date().toISOString() }, isDirty: true })
   },
 
   selectBlock(id) {

@@ -23,6 +23,7 @@ import { BlockRegistry } from '@/features/planner/block-registry'
 import { getThemeStyle } from '@/features/planner/theme-tokens'
 import { cn } from '@/lib/utils'
 import type { PlannerBlock } from '@/features/storage/types'
+import { PlannerPreviewAnimation } from './planner-preview-animation'
 
 function SortableBlock({ block }: { block: PlannerBlock }) {
   const selectedBlockId = usePlannerEditor((s) => s.selectedBlockId)
@@ -45,7 +46,7 @@ function SortableBlock({ block }: { block: PlannerBlock }) {
       style={style}
       className={cn(
         'planner-block group relative rounded-[var(--planner-radius,8px)] border transition-all cursor-pointer',
-        block.width === 'half' ? 'w-[49%] inline-block align-top' : 'w-full',
+        block.width === 'half' ? 'col-span-1' : 'col-span-2',
         selectedBlockId === block.id
           ? 'border-[var(--color-accent)] shadow-[0_0_0_2px_var(--color-accent-soft)]'
           : 'border-[var(--planner-border,var(--border))] hover:border-[var(--color-accent)]'
@@ -91,20 +92,11 @@ export function PlannerCanvas() {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
-  if (!planner) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-8">
-        <p className="text-4xl">📋</p>
-        <p className="text-sm font-medium text-[var(--text-secondary)]">Your planner is empty</p>
-        <p className="text-xs text-[var(--text-faint)] max-w-xs">
-          Add a block from the left sidebar to get started. Your work saves automatically.
-        </p>
-      </div>
-    )
-  }
+  if (!planner) return null
 
   const sortedBlocks = [...planner.blocks].sort((a, b) => a.order - b.order)
   const blockIds = sortedBlocks.map((b) => b.id)
+  const hasBlocks = sortedBlocks.length > 0
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -115,16 +107,32 @@ export function PlannerCanvas() {
     reorderBlocks(reordered)
   }
 
-  const paperWidth = planner.paperSize === 'A4' ? '794px' : '816px'
+  // Show animated preview when no blocks — same logic as Clear button's hasBlocks check
+  if (!hasBlocks) {
+    return (
+      <div className="flex items-center justify-center h-full p-8">
+        <div className="w-full max-w-2xl h-full min-h-[500px] rounded-2xl border border-[var(--border)] overflow-hidden bg-[var(--bg-surface)]/80 backdrop-blur-md shadow-[var(--shadow-lg)]">
+          <PlannerPreviewAnimation />
+        </div>
+      </div>
+    )
+  }
+
+  // A4: 794×1123px  |  Letter: 816×1056px  (at 96dpi)
+  const isLandscape = planner.orientation === 'landscape'
+  const paperW = planner.paperSize === 'A4' ? 794 : 816
+  const paperH = planner.paperSize === 'A4' ? 1123 : 1056
+  const canvasWidth = isLandscape ? paperH : paperW
+  const canvasMinHeight = isLandscape ? paperW : paperH
 
   return (
     <div
-      className="planner-canvas mx-auto"
+      className="planner-canvas mx-auto transition-all duration-300"
       style={{
         ...getThemeStyle(planner.theme),
-        maxWidth: paperWidth,
+        width: `${canvasWidth}px`,
         backgroundColor: 'var(--planner-bg)',
-        minHeight: '1000px',
+        minHeight: `${canvasMinHeight}px`,
         borderRadius: '12px',
         boxShadow: '0 4px 32px rgba(0,0,0,0.08)',
         padding: '32px',
@@ -134,18 +142,11 @@ export function PlannerCanvas() {
       }}
       data-theme={planner.theme}
     >
-      {sortedBlocks.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-64 text-center">
-          <p className="text-2xl mb-3">📋</p>
-          <p className="text-sm font-medium" style={{ color: 'var(--planner-text-muted)' }}>
-            Add blocks from the left sidebar to start building your planner
-          </p>
-        </div>
-      )}
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
-          <div className="flex flex-wrap gap-4">
+          {/* 2-column grid: half-width blocks get col-span-1, full-width get col-span-2 */}
+          <div className="grid grid-cols-2 gap-4">
             {sortedBlocks.map((block) => (
               <SortableBlock key={block.id} block={block} />
             ))}

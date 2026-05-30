@@ -1,13 +1,34 @@
 import React from 'react'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type {
-  Planner, ExportConfig, PlannerBlock,
+  Planner, ExportConfig, PlannerBlock, PlannerTheme,
   CalendarNotesContent, CalendarNote,
   FocusContent, NotesContent, RoutineContent, GoalContent,
   HabitTrackerContent, CalendarContent, TableContent,
   TimelineContent, DashboardCardContent,
+  SpacerContent, ImageContent,
 } from '@/features/storage/types'
+import { THEME_MAP } from '@/features/planner/theme-tokens'
 
+// ─── Theme-aware colour palette ───────────────────────────────────────────────
+
+function getThemeColors(theme: PlannerTheme) {
+  const t = THEME_MAP[theme]
+  return {
+    pageBg:   t['--planner-bg'],
+    blockBg:  t['--planner-surface'],
+    ink:      t['--planner-text'],
+    muted:    t['--planner-text-muted'],
+    accent:   t['--planner-accent'],
+    line:     t['--planner-border'],
+    faint:    t['--planner-border'],
+    // Fixed semantic colours (don't change with theme)
+    green: '#16a34a', red: '#dc2626', amber: '#d97706',
+    accentLight: '#ede9fe',
+  }
+}
+
+// Legacy C kept for block internals that reference it directly
 const C = {
   ink: '#111827', muted: '#6b7280', faint: '#e5e7eb', fainter: '#f9fafb',
   accent: '#6366f1', accentLight: '#ede9fe',
@@ -15,22 +36,32 @@ const C = {
   line: '#e5e7eb', blockBg: '#fafafa', pageBg: '#ffffff',
 }
 
-const styles = StyleSheet.create({
-  page: { padding: '18mm 16mm', fontFamily: 'Helvetica', backgroundColor: C.pageBg, fontSize: 10, color: C.ink, lineHeight: 1.5 },
-  header: { marginBottom: 14 },
-  title: { fontSize: 20, fontWeight: 'bold', color: C.ink, letterSpacing: -0.5, marginBottom: 3 },
-  subtitle: { fontSize: 8.5, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8 },
-  divider: { borderBottom: `1pt solid ${C.line}`, marginVertical: 10 },
-  block: { marginBottom: 10, padding: '8pt 10pt', border: `0.75pt solid ${C.faint}`, borderRadius: 4, backgroundColor: C.blockBg },
-  blockLabel: { fontSize: 7.5, color: C.muted, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6, borderBottom: `0.5pt solid ${C.faint}`, paddingBottom: 4 },
-  text: { fontSize: 10, color: C.ink },
-  small: { fontSize: 8.5, color: C.muted },
-  bold: { fontSize: 10, fontWeight: 'bold', color: C.ink },
-  ruledLine: { borderBottom: `0.75pt solid ${C.faint}`, marginBottom: 10, paddingBottom: 2 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
-  footer: { position: 'absolute', bottom: '12mm', left: '16mm', right: '16mm', borderTop: `0.5pt solid ${C.faint}`, paddingTop: 5 },
-  footerText: { fontSize: 7.5, color: C.muted, textAlign: 'center' },
-})
+// Build dynamic styles from theme
+function makeStyles(T: ReturnType<typeof getThemeColors>) {
+  return StyleSheet.create({
+    page: { padding: '18mm 16mm', fontFamily: 'Helvetica', backgroundColor: T.pageBg, fontSize: 10, color: T.ink, lineHeight: 1.5 },
+    header: { marginBottom: 14 },
+    title: { fontSize: 20, fontWeight: 'bold', color: T.ink, letterSpacing: -0.5, marginBottom: 3 },
+    subtitle: { fontSize: 8.5, color: T.muted, textTransform: 'uppercase', letterSpacing: 0.8 },
+    divider: { borderBottom: `1pt solid ${T.line}`, marginVertical: 10 },
+    block: { marginBottom: 10, padding: '8pt 10pt', border: `0.75pt solid ${T.faint}`, borderRadius: 4, backgroundColor: T.blockBg },
+    blockLabel: { fontSize: 7.5, color: T.muted, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6, borderBottom: `0.5pt solid ${T.faint}`, paddingBottom: 4 },
+    text: { fontSize: 10, color: T.ink },
+    small: { fontSize: 8.5, color: T.muted },
+    bold: { fontSize: 10, fontWeight: 'bold', color: T.ink },
+    ruledLine: { borderBottom: `0.75pt solid ${T.faint}`, marginBottom: 10, paddingBottom: 2 },
+    row: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 },
+    footer: { position: 'absolute', bottom: '12mm', left: '16mm', right: '16mm', borderTop: `0.5pt solid ${T.line}`, paddingTop: 5 },
+    footerText: { fontSize: 7.5, color: T.muted, textAlign: 'center' },
+  })
+}
+
+// Module-level styles — overwritten per document render via setThemeStyles()
+let styles = makeStyles(getThemeColors('minimal'))
+
+function setThemeStyles(theme: PlannerTheme) {
+  styles = makeStyles(getThemeColors(theme))
+}
 
 const PRIORITY_COLORS: Record<string, string> = { high: C.red, medium: C.amber, low: C.accent }
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -253,6 +284,28 @@ function CalendarNotesBlock({ block }: { block: PlannerBlock }) {
   )
 }
 
+function SpacerBlock({ block }: { block: PlannerBlock }) {
+  const c = block.content as SpacerContent
+  return <View style={{ height: c.height, width: '100%' }} />
+}
+
+function ImageBlock({ block }: { block: PlannerBlock }) {
+  const c = block.content as ImageContent
+  if (!c.src) return null
+  return (
+    <View style={{ ...styles.block, alignItems: 'center' }}>
+      {block.label && <Text style={styles.blockLabel}>{block.label}</Text>}
+      {/* @react-pdf/renderer Image requires a URL or base64 src */}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {React.createElement((require('@react-pdf/renderer') as any).Image, {
+        src: c.src,
+        style: { maxWidth: '100%', borderRadius: 4 },
+      })}
+      {c.caption && <Text style={{ ...styles.small, marginTop: 6, textAlign: 'center' }}>{c.caption}</Text>}
+    </View>
+  )
+}
+
 function BlockView({ block }: { block: PlannerBlock }) {
   switch (block.type) {
     case 'notes':          return <NotesBlock block={block} />
@@ -265,6 +318,8 @@ function BlockView({ block }: { block: PlannerBlock }) {
     case 'table':          return <TableBlock block={block} />
     case 'timeline':       return <TimelineBlock block={block} />
     case 'dashboard-card': return <DashboardCardBlock block={block} />
+    case 'spacer':         return <SpacerBlock block={block} />
+    case 'image':          return <ImageBlock block={block} />
     default: return <View style={styles.block}>{block.label && <Text style={styles.blockLabel}>{block.label}</Text>}<Text style={styles.small}>[{block.type}]</Text></View>
   }
 }
@@ -272,18 +327,53 @@ function BlockView({ block }: { block: PlannerBlock }) {
 interface PlannerPdfDocumentProps { planner: Planner; config: ExportConfig }
 
 export function PlannerPdfDocument({ planner, config }: PlannerPdfDocumentProps) {
+  // Set module-level styles to this planner's theme — all block functions will use them
+  setThemeStyles(planner.theme)
+  const T = getThemeColors(planner.theme)
+  const S = styles
+
   const sorted = [...planner.blocks].sort((a, b) => a.order - b.order)
-  const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
+  // Group blocks: pair consecutive half-width blocks side by side, full-width stand alone
+  const rows: PlannerBlock[][] = []
+  let i = 0
+  while (i < sorted.length) {
+    const cur = sorted[i]
+    const next = sorted[i + 1]
+    if (cur.width === 'half' && next?.width === 'half') {
+      rows.push([cur, next])
+      i += 2
+    } else {
+      rows.push([cur])
+      i += 1
+    }
+  }
+
   return (
     <Document title={planner.title}>
-      <Page size={config.paperSize === 'Letter' ? 'LETTER' : config.paperSize} orientation={config.orientation} style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{planner.title}</Text>
-          <Text style={styles.subtitle}>PLANNER · {now}</Text>
+      <Page
+        size={config.paperSize === 'Letter' ? 'LETTER' : config.paperSize}
+        orientation={config.orientation}
+        style={S.page}
+      >
+        <View style={S.header}>
+          <Text style={S.title}>{planner.title}</Text>
         </View>
-        <View style={styles.divider} />
-        {sorted.map((block) => <BlockView key={block.id} block={block} />)}
-        <View style={styles.footer}><Text style={styles.footerText}>DailyPlanly · Exported {now}</Text></View>
+        <View style={S.divider} />
+
+        {rows.map((row, ri) =>
+          row.length === 2 ? (
+            // Two half-width blocks side by side
+            <View key={ri} style={{ flexDirection: 'row', gap: 8, marginBottom: 10 }}>
+              <View style={{ flex: 1 }}><BlockView block={row[0]} /></View>
+              <View style={{ flex: 1 }}><BlockView block={row[1]} /></View>
+            </View>
+          ) : (
+            // Single block (full or lone half)
+            <BlockView key={ri} block={row[0]} />
+          )
+        )}
+
       </Page>
     </Document>
   )

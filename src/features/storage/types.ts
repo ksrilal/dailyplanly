@@ -20,6 +20,8 @@ export type PlannerBlockType =
   | 'routine'
   | 'focus'
   | 'dashboard-card'
+  | 'spacer'
+  | 'image'
 
 export interface CalendarContent {
   month?: number
@@ -83,10 +85,23 @@ export interface DashboardCardContent {
   note?: string
 }
 
+export interface SpacerContent {
+  height: number // px — how tall the empty space is
+}
+
+export interface ImageContent {
+  src: string      // base64 data URL or empty string
+  alt: string
+  fit: 'contain' | 'cover' | 'fill'
+  caption?: string
+}
+
 export type PlannerBlockContent =
   | CalendarContent
   | CalendarNotesContent
   | TableContent
+  | SpacerContent
+  | ImageContent
   | HabitTrackerContent
   | TimelineContent
   | NotesContent

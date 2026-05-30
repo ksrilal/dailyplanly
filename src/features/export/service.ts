@@ -46,7 +46,13 @@ export async function exportElementToJpg(
 // ─── PDF export (lazy-loads @react-pdf/renderer) ─────────────────────────────
 
 export async function exportPlannerToPdf(planner: Planner, config?: Partial<ExportConfig>): Promise<void> {
-  const cfg = buildConfig({ ...config, format: 'pdf' })
+  const cfg = buildConfig({
+    ...config,
+    format: 'pdf',
+    // Use the planner's own paper size and orientation settings
+    paperSize: planner.paperSize ?? 'A4',
+    orientation: planner.orientation ?? 'portrait',
+  })
   const { renderPlannerPdf } = await import('./pdf-renderer')
   await renderPlannerPdf(planner, cfg)
 }

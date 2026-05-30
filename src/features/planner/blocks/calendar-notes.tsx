@@ -297,24 +297,19 @@ function CalendarNotesPreview({ block }: BlockPreviewProps) {
                   >
                     {day}
                   </div>
-                  {/* Notes */}
-                  {dayNotes.slice(0, 2).map((note) => {
+                  {/* Notes — show ALL, no truncation, cell grows with content */}
+                  {dayNotes.map((note) => {
                     const pal = NOTE_PREVIEW[note.color]
                     return (
                       <div
                         key={note.id}
-                        className="mx-0.5 mb-0.5 px-1 rounded text-[7px] leading-tight truncate"
+                        className="mx-0.5 mb-0.5 px-1 rounded text-[7px] leading-snug break-words"
                         style={{ background: pal.bg, color: 'var(--planner-text)', borderLeft: `2px solid ${pal.accent}` }}
                       >
                         {note.text}
                       </div>
                     )
                   })}
-                  {dayNotes.length > 2 && (
-                    <div className="mx-0.5 text-[7px] text-center" style={{ color: 'var(--planner-text-muted)' }}>
-                      +{dayNotes.length - 2}
-                    </div>
-                  )}
                 </>
               )}
             </div>

@@ -2,11 +2,38 @@
 
 import { BlockRegistry, type BlockEditorProps, type BlockPreviewProps } from '../block-registry'
 import { Button } from '@/components/ui/button'
-import { generateId } from '@/lib/utils'
+import { X } from 'lucide-react'
 import type { TableContent } from '@/features/storage/types'
 
 function TableEditor({ block, onChange }: BlockEditorProps) {
   const content = block.content as TableContent
+  const colCount = content.headers.length
+
+  function addColumn() {
+    onChange({
+      ...content,
+      headers: [...content.headers, `Col ${colCount + 1}`],
+      rows: content.rows.map((r) => [...r, '']),
+    })
+  }
+
+  function removeColumn(ci: number) {
+    if (colCount <= 1) return
+    onChange({
+      ...content,
+      headers: content.headers.filter((_, i) => i !== ci),
+      rows: content.rows.map((r) => r.filter((_, i) => i !== ci)),
+    })
+  }
+
+  function addRow() {
+    onChange({ ...content, rows: [...content.rows, content.headers.map(() => '')] })
+  }
+
+  function removeRow(ri: number) {
+    onChange({ ...content, rows: content.rows.filter((_, i) => i !== ri) })
+  }
+
   return (
     <div className="flex flex-col gap-3">
       <div className="overflow-x-auto">
@@ -14,25 +41,47 @@ function TableEditor({ block, onChange }: BlockEditorProps) {
           <thead>
             <tr>
               {content.headers.map((h, ci) => (
-                <th key={ci} className="p-1">
-                  <input
-                    type="text"
-                    value={h}
-                    placeholder={`Col ${ci + 1}`}
-                    onChange={(e) => {
-                      const headers = [...content.headers]
-                      headers[ci] = e.target.value
-                      onChange({ ...content, headers })
-                    }}
-                    className="w-full text-xs font-semibold border-b border-[var(--border)] bg-transparent focus:outline-none text-center"
-                  />
+                <th key={ci} className="p-1 relative group/col">
+                  <div className="flex items-center gap-0.5">
+                    <input
+                      type="text"
+                      value={h}
+                      placeholder={`Col ${ci + 1}`}
+                      onChange={(e) => {
+                        const headers = [...content.headers]
+                        headers[ci] = e.target.value
+                        onChange({ ...content, headers })
+                      }}
+                      className="flex-1 text-xs font-semibold border-b border-[var(--border)] bg-transparent focus:outline-none text-center min-w-0"
+                    />
+                    {/* Remove column button — only show if >1 column */}
+                    {colCount > 1 && (
+                      <button
+                        onClick={() => removeColumn(ci)}
+                        className="flex-shrink-0 opacity-0 group-hover/col:opacity-100 transition-opacity text-[var(--text-faint)] hover:text-red-400 p-0.5 rounded"
+                        title={`Remove column ${ci + 1}`}
+                      >
+                        <X className="h-3 w-3" strokeWidth={2} />
+                      </button>
+                    )}
+                  </div>
                 </th>
               ))}
+              {/* Add column header cell */}
+              <th className="p-1 w-7">
+                <button
+                  onClick={addColumn}
+                  title="Add column"
+                  className="w-6 h-6 rounded border border-dashed border-[var(--border)] text-[var(--text-faint)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors flex items-center justify-center text-base leading-none"
+                >
+                  +
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
             {content.rows.map((row, ri) => (
-              <tr key={ri}>
+              <tr key={ri} className="group/row">
                 {row.map((cell, ci) => (
                   <td key={ci} className="p-1">
                     <input
@@ -48,14 +97,22 @@ function TableEditor({ block, onChange }: BlockEditorProps) {
                     />
                   </td>
                 ))}
+                {/* Remove row button aligned with add column column */}
+                <td className="p-1 w-7">
+                  <button
+                    onClick={() => removeRow(ri)}
+                    className="w-6 h-6 rounded opacity-0 group-hover/row:opacity-100 transition-opacity text-[var(--text-faint)] hover:text-red-400 flex items-center justify-center"
+                    title="Remove row"
+                  >
+                    <X className="h-3 w-3" strokeWidth={2} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <Button variant="ghost" size="sm" onClick={() =>
-        onChange({ ...content, rows: [...content.rows, content.headers.map(() => '')] })
-      }>
+      <Button variant="ghost" size="sm" onClick={addRow}>
         + Add row
       </Button>
     </div>

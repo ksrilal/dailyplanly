@@ -1,0 +1,188 @@
+@media print {
+  /* ─── Show ONLY the print view for checklists ─── */
+  .checklist-print-only {
+    display: block !important;
+  }
+
+  /* ─── Hide ALL UI chrome ─── */
+  header, nav, footer,
+  .no-print,
+  .planner-toolbar,
+  .checklist-toolbar,
+  .block-palette,
+  .block-settings,
+  .autosave-indicator,
+  .checklist-search,
+  .add-item-btn,
+  [data-no-print],
+  [aria-label="Filter checklist items"],
+  [aria-label="Add item"],
+  [placeholder="Search tasks…"],
+  button:not(.print-visible),
+  /* Checklist UI — hide everything except the print view */
+  .checklist-item,
+  .checklist-bg-animation,
+  canvas {
+    display: none !important;
+  }
+
+  /* Hide the entire normal content area when printing a checklist */
+  body:has(.checklist-print-only) > * {
+    display: none !important;
+  }
+  body:has(.checklist-print-only) .checklist-print-only {
+    display: block !important;
+  }
+
+  /* ─── Page ─── */
+  @page {
+    margin: 18mm 15mm;
+    size: A4 portrait;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* ─── Document title header ─── */
+  .print-doc-title {
+    display: block !important;
+    font-size: 20pt;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4pt;
+    letter-spacing: -0.02em;
+  }
+
+  .print-doc-meta {
+    display: block !important;
+    font-size: 8.5pt;
+    color: #888;
+    margin-bottom: 18pt;
+    border-bottom: 1pt solid #e8e8e8;
+    padding-bottom: 8pt;
+  }
+
+  /* ─── Planner: expand canvas to full width ─── */
+  .planner-canvas,
+  .planner-print-root {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+    border-radius: 0 !important;
+  }
+
+  /* ─── Planner blocks — clean card grid ─── */
+  .planner-block {
+    break-inside: avoid;
+    margin-bottom: 10pt;
+    border: 0.75pt solid #ddd;
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+    background: #fafafa !important;
+  }
+
+  .planner-block--half {
+    width: 48%;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 3%;
+  }
+
+  /* Block labels */
+  [style*='--planner-text-muted'] {
+    font-size: 7pt !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  /* ─── Checklist print root ─── */
+  .checklist-print-root {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* ─── Checklist items ─── */
+  .checklist-item {
+    break-inside: avoid;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 6pt !important;
+    padding: 4pt 0 !important;
+    border-bottom: 0.5pt solid #f0f0f0 !important;
+    background: transparent !important;
+  }
+
+  /* Hide drag handle, action buttons in checklist */
+  .checklist-item > [aria-label="Drag to reorder"],
+  .checklist-item > div:last-child {
+    display: none !important;
+  }
+
+  /* ─── Checklist progress bar ─── */
+  .checklist-progress {
+    display: block !important;
+    margin-bottom: 10pt;
+  }
+
+  .checklist-progress .progress-bar-track {
+    height: 5pt;
+    background: #e5e7eb;
+    border-radius: 3pt;
+    overflow: hidden;
+  }
+
+  .checklist-progress .progress-bar-fill {
+    height: 100%;
+    background: #22c55e;
+    border-radius: 3pt;
+  }
+
+  /* ─── Three-panel layout: collapse to single column ─── */
+  .planner-editor-layout {
+    display: block !important;
+    height: auto !important;
+  }
+
+  /* ─── Typography ─── */
+  h1, h2, h3 { break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+  a[href]::after { content: none !important; }
+
+  /* ─── Kill all decorative shadows/effects ─── */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* ─── Input fields: show as plain text ─── */
+  input, textarea {
+    border: none !important;
+    background: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+    padding: 0 !important;
+  }
+
+  /* ─── Progress stats text ─── */
+  .print-progress-text {
+    display: block !important;
+    font-size: 8.5pt;
+    color: #666;
+    margin-bottom: 8pt;
+    font-weight: 600;
+  }
+}

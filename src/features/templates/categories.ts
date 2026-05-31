@@ -1,0 +1,68 @@
+import type { TemplateCategory } from './types'
+
+export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
+  {
+    id: 'productivity',
+    slug: 'productivity',
+    label: 'Productivity',
+    description: 'Daily planners, time blocking, and goal tracking templates.',
+    icon: 'Zap',
+    order: 1,
+  },
+  {
+    id: 'health-wellness',
+    slug: 'health-wellness',
+    label: 'Health & Wellness',
+    description: 'Habit trackers, meal planners, fitness logs, and wellness journals.',
+    icon: 'Heart',
+    order: 2,
+  },
+  {
+    id: 'finance',
+    slug: 'finance',
+    label: 'Finance',
+    description: 'Budget planners, savings trackers, and expense logs.',
+    icon: 'TrendingUp',
+    order: 3,
+  },
+  {
+    id: 'education',
+    slug: 'education',
+    label: 'Education',
+    description: 'Study schedules, assignment trackers, and reading lists.',
+    icon: 'BookOpen',
+    order: 4,
+  },
+  {
+    id: 'lifestyle',
+    slug: 'lifestyle',
+    label: 'Lifestyle',
+    description: 'Gratitude journals, bucket lists, and personal growth planners.',
+    icon: 'Sun',
+    order: 5,
+  },
+  {
+    id: 'family-home',
+    slug: 'family-home',
+    label: 'Family & Home',
+    description: 'Chore charts, meal plans, and household management templates.',
+    icon: 'Home',
+    order: 6,
+  },
+  {
+    id: 'work-office',
+    slug: 'work-office',
+    label: 'Work & Office',
+    description: 'Meeting agendas, project trackers, and weekly work planners.',
+    icon: 'Briefcase',
+    order: 7,
+  },
+  {
+    id: 'travel-events',
+    slug: 'travel-events',
+    label: 'Travel & Events',
+    description: 'Trip planners, packing lists, and event schedules.',
+    icon: 'MapPin',
+    order: 8,
+  },
+]

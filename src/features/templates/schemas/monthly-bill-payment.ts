@@ -1,0 +1,45 @@
+import type { Template } from '@/features/templates/types'
+
+export const monthlyBillPaymentTemplate: Template = {
+  id: 'tpl-034',
+  slug: 'monthly-bill-payment',
+  title: 'Monthly Bill Payment Checklist',
+  description: 'Never miss a payment again. This monthly bill checklist covers housing, utilities, insurance, subscriptions, loans, and memberships — your complete financial obligations at a glance.',
+  category: 'finance',
+  type: 'checklist',
+  featured: false,
+  tags: ['bills', 'payments', 'finance', 'monthly', 'budgeting'],
+  previewImage: '/templates/previews/monthly-bill-payment.png',
+  checklistDefaults: {
+    mode: 'simple',
+    items: [
+      { id: 'ci-mbp-1', text: 'Rent or mortgage payment', checked: false, order: 0, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-2', text: 'Electricity bill', checked: false, order: 1, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-3', text: 'Gas bill', checked: false, order: 2, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-4', text: 'Water rates', checked: false, order: 3, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-5', text: 'Broadband / internet bill', checked: false, order: 4, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-6', text: 'Mobile phone bill', checked: false, order: 5, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-7', text: 'TV licence / streaming subscriptions (Netflix, Disney+, etc.)', checked: false, order: 6, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-8', text: 'Spotify or music subscription', checked: false, order: 7, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-9', text: 'Gym membership', checked: false, order: 8, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-10', text: 'Car insurance premium', checked: false, order: 9, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-11', text: 'Home contents insurance', checked: false, order: 10, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-12', text: 'Life insurance / income protection', checked: false, order: 11, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-13', text: 'Health insurance (if applicable)', checked: false, order: 12, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-14', text: 'Car loan or finance payment', checked: false, order: 13, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-15', text: 'Personal loan minimum payment', checked: false, order: 14, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-16', text: 'Credit card minimum payment — Card 1', checked: false, order: 15, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-17', text: 'Credit card minimum payment — Card 2', checked: false, order: 16, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-18', text: 'Student loan repayment', checked: false, order: 17, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-19', text: 'Pension contribution confirmed', checked: false, order: 18, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-20', text: 'Savings transfer on payday', checked: false, order: 19, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-21', text: 'Council tax payment', checked: false, order: 20, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-22', text: 'Amazon Prime or shopping membership', checked: false, order: 21, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-23', text: 'Cloud storage subscription (Google One, iCloud, etc.)', checked: false, order: 22, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-24', text: 'Software subscriptions (Adobe, Microsoft 365, etc.)', checked: false, order: 23, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-25', text: 'Review bank statement for any unknown charges', checked: false, order: 24, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-26', text: 'Update budget spreadsheet with all payments made', checked: false, order: 25, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-mbp-27', text: 'Check savings account balance and interest earned', checked: false, order: 26, parentId: null, collapsed: false, depth: 0 },
+    ]
+  }
+}

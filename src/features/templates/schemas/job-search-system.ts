@@ -1,0 +1,65 @@
+import type { Template } from '@/features/templates/types'
+
+export const jobSearchSystemTemplate: Template = {
+  id: 'tpl-057',
+  slug: 'job-search-system',
+  title: 'Job Search System',
+  description: 'A structured job search system covering personal branding, application tracking, interview preparation, networking, and offer negotiation — everything to land the role you want.',
+  category: 'work-office',
+  type: 'checklist',
+  featured: true,
+  tags: ['job search', 'career', 'interview', 'CV', 'networking'],
+  previewImage: '/templates/previews/job-search-system.png',
+  checklistDefaults: {
+    mode: 'advanced',
+    items: [
+      { id: 'ci-jss-1', text: 'Personal Branding & Preparation', checked: false, order: 0, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-jss-2', text: 'Update CV / resume with latest role and achievements', checked: false, order: 0, parentId: 'ci-jss-1', collapsed: false, depth: 1 },
+      { id: 'ci-jss-3', text: 'Tailor CV for each target role type', checked: false, order: 1, parentId: 'ci-jss-1', collapsed: false, depth: 1 },
+      { id: 'ci-jss-4', text: 'LinkedIn Profile', checked: false, order: 2, parentId: 'ci-jss-1', collapsed: false, depth: 1 },
+      { id: 'ci-jss-5', text: 'Update LinkedIn headline and summary', checked: false, order: 0, parentId: 'ci-jss-4', collapsed: false, depth: 2 },
+      { id: 'ci-jss-6', text: 'Add all recent experience and skills', checked: false, order: 1, parentId: 'ci-jss-4', collapsed: false, depth: 2 },
+      { id: 'ci-jss-7', text: 'Request 3 LinkedIn recommendations', checked: false, order: 2, parentId: 'ci-jss-4', collapsed: false, depth: 2 },
+      { id: 'ci-jss-8', text: 'Set LinkedIn "Open to Work" with target roles', checked: false, order: 3, parentId: 'ci-jss-4', collapsed: false, depth: 2 },
+      { id: 'ci-jss-9', text: 'Write a compelling cover letter template', checked: false, order: 3, parentId: 'ci-jss-1', collapsed: false, depth: 1 },
+      { id: 'ci-jss-10', text: 'Prepare professional references list (3 contacts)', checked: false, order: 4, parentId: 'ci-jss-1', collapsed: false, depth: 1 },
+
+      { id: 'ci-jss-11', text: 'Job Search Strategy', checked: false, order: 1, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-jss-12', text: 'Define target role, industry, and salary range', checked: false, order: 0, parentId: 'ci-jss-11', collapsed: false, depth: 1 },
+      { id: 'ci-jss-13', text: 'Create list of 20 target companies', checked: false, order: 1, parentId: 'ci-jss-11', collapsed: false, depth: 1 },
+      { id: 'ci-jss-14', text: 'Set up job alerts on LinkedIn, Indeed, and Glassdoor', checked: false, order: 2, parentId: 'ci-jss-11', collapsed: false, depth: 1 },
+      { id: 'ci-jss-15', text: 'Apply to 5–10 relevant roles per week', checked: false, order: 3, parentId: 'ci-jss-11', collapsed: false, depth: 1 },
+      { id: 'ci-jss-16', text: 'Application Tracking', checked: false, order: 4, parentId: 'ci-jss-11', collapsed: false, depth: 1 },
+      { id: 'ci-jss-17', text: 'Log every application (company, role, date, status)', checked: false, order: 0, parentId: 'ci-jss-16', collapsed: false, depth: 2 },
+      { id: 'ci-jss-18', text: 'Follow up on applications after 1 week of silence', checked: false, order: 1, parentId: 'ci-jss-16', collapsed: false, depth: 2 },
+      { id: 'ci-jss-19', text: 'Track rejections — look for patterns to improve', checked: false, order: 2, parentId: 'ci-jss-16', collapsed: false, depth: 2 },
+
+      { id: 'ci-jss-20', text: 'Networking', checked: false, order: 2, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-jss-21', text: 'Reach out to 5 former colleagues this week', checked: false, order: 0, parentId: 'ci-jss-20', collapsed: false, depth: 1 },
+      { id: 'ci-jss-22', text: 'Attend 1 industry event or webinar per month', checked: false, order: 1, parentId: 'ci-jss-20', collapsed: false, depth: 1 },
+      { id: 'ci-jss-23', text: 'Informational Interviews', checked: false, order: 2, parentId: 'ci-jss-20', collapsed: false, depth: 1 },
+      { id: 'ci-jss-24', text: 'Request 2 informational interviews this week', checked: false, order: 0, parentId: 'ci-jss-23', collapsed: false, depth: 2 },
+      { id: 'ci-jss-25', text: 'Prepare 5 questions to ask in each conversation', checked: false, order: 1, parentId: 'ci-jss-23', collapsed: false, depth: 2 },
+      { id: 'ci-jss-26', text: 'Send thank-you note within 24 hours', checked: false, order: 2, parentId: 'ci-jss-23', collapsed: false, depth: 2 },
+
+      { id: 'ci-jss-27', text: 'Interview Preparation', checked: false, order: 3, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-jss-28', text: 'Research the company thoroughly', checked: false, order: 0, parentId: 'ci-jss-27', collapsed: false, depth: 1 },
+      { id: 'ci-jss-29', text: 'Behavioural Questions', checked: false, order: 1, parentId: 'ci-jss-27', collapsed: false, depth: 1 },
+      { id: 'ci-jss-30', text: 'Prepare 10 STAR stories (Situation, Task, Action, Result)', checked: false, order: 0, parentId: 'ci-jss-29', collapsed: false, depth: 2 },
+      { id: 'ci-jss-31', text: 'Practise answering "Tell me about yourself" out loud', checked: false, order: 1, parentId: 'ci-jss-29', collapsed: false, depth: 2 },
+      { id: 'ci-jss-32', text: 'Prepare answer to "Why do you want to leave?"', checked: false, order: 2, parentId: 'ci-jss-29', collapsed: false, depth: 2 },
+      { id: 'ci-jss-33', text: 'Technical Preparation', checked: false, order: 2, parentId: 'ci-jss-27', collapsed: false, depth: 1 },
+      { id: 'ci-jss-34', text: 'Review job description and align skills to requirements', checked: false, order: 0, parentId: 'ci-jss-33', collapsed: false, depth: 2 },
+      { id: 'ci-jss-35', text: 'Practice any technical tests or case studies', checked: false, order: 1, parentId: 'ci-jss-33', collapsed: false, depth: 2 },
+      { id: 'ci-jss-36', text: 'Prepare 5 smart questions to ask the interviewer', checked: false, order: 3, parentId: 'ci-jss-27', collapsed: false, depth: 1 },
+      { id: 'ci-jss-37', text: 'Do a mock interview with a friend or coach', checked: false, order: 4, parentId: 'ci-jss-27', collapsed: false, depth: 1 },
+
+      { id: 'ci-jss-38', text: 'Offer & Negotiation', checked: false, order: 4, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-jss-39', text: 'Research market salary benchmarks before any offer', checked: false, order: 0, parentId: 'ci-jss-38', collapsed: false, depth: 1 },
+      { id: 'ci-jss-40', text: 'Never accept offer on the spot — ask for 48 hours to review', checked: false, order: 1, parentId: 'ci-jss-38', collapsed: false, depth: 1 },
+      { id: 'ci-jss-41', text: 'Negotiate salary — aim 10–15% above target', checked: false, order: 2, parentId: 'ci-jss-38', collapsed: false, depth: 1 },
+      { id: 'ci-jss-42', text: 'Negotiate non-salary benefits (remote days, holiday, pension)', checked: false, order: 3, parentId: 'ci-jss-38', collapsed: false, depth: 1 },
+      { id: 'ci-jss-43', text: 'Get offer in writing before giving notice', checked: false, order: 4, parentId: 'ci-jss-38', collapsed: false, depth: 1 },
+    ]
+  }
+}

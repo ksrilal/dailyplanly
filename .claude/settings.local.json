@@ -1,7 +1,50 @@
 {
   "permissions": {
     "allow": [
-      "Bash(Copy-Item \"index.thml\" \"index.html\")"
+      "Bash(Copy-Item \"index.thml\" \"index.html\")",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\extensions\\\\git\\\\scripts\\\\powershell\\\\initialize-repo.ps1\")",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\extensions\\\\git\\\\scripts\\\\powershell\\\\create-new-feature.ps1\" -Json -ShortName \"dailyplanly-platform\" \"DailyPlanly platform with utility tools, local storage, export system, and SEO architecture\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\001-dailyplanly-platform\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\001-dailyplanly-platform\\\\checklists\")",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\scripts\\\\powershell\\\\setup-plan.ps1\" -Json)",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\001-dailyplanly-platform\\\\contracts\")",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\scripts\\\\powershell\\\\setup-tasks.ps1\" -Json)",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\extensions\\\\git\\\\scripts\\\\powershell\\\\create-new-feature.ps1\" -Json -ShortName \"dailyplanly-mvp-platform\" \"Build DailyPlanly full platform - planner system, checklist system, template gallery, utility tools, homepage, local storage, print and export\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\002-dailyplanly-mvp-platform\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\002-dailyplanly-mvp-platform\\\\checklists\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\specs\\\\002-dailyplanly-mvp-platform\\\\contracts\")",
+      "PowerShell(& \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\.specify\\\\scripts\\\\powershell\\\\check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(cat > *)",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\src\\\\app\\\\planner\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\src\\\\app\\\\checklist\")",
+      "Bash(rm -rf 'd:/SaaS/dailyplanly/dailyplanly/src/app/planner/[id]')",
+      "Bash(rm -rf 'd:/SaaS/dailyplanly/dailyplanly/src/app/checklist/[id]')",
+      "Bash(node -e ' *)",
+      "Bash(cp \"C:/Users/Dell/Downloads/dailyplanly.png\" \"d:/SaaS/dailyplanly/dailyplanly/public/favicon.png\" *)",
+      "Bash(npx tsc *)",
+      "Bash(New-Item -ItemType File -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\src\\\\features\\\\templates\\\\schemas\\\\study-planner.ts\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Output \"created\")",
+      "PowerShell(New-Item -ItemType File -Force \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\src\\\\features\\\\templates\\\\schemas\\\\study-planner.ts\")",
+      "Bash(sed -i \"s/category: 'health'/category: 'health-wellness'/g\" *.ts)",
+      "Bash(sed -i \"s/category: 'family'/category: 'family-home'/g\" *.ts)",
+      "Bash(sed -i \"s/category: 'work'/category: 'work-office'/g\" *.ts)",
+      "Bash(sed -i \"s/category: 'personal'/category: 'lifestyle'/g\" *.ts)",
+      "Bash(sed -i \"s/theme: 'forest'/theme: 'wellness-calm'/g\" *.ts)",
+      "Bash(sed -i \"s/theme: 'ocean'/theme: 'study-focus'/g\" *.ts)",
+      "Bash(sed -i \"s/theme: 'midnight'/theme: 'elegant-dark'/g\" *.ts)",
+      "Bash(sed -i \"s/theme: 'rose'/theme: 'soft-paper'/g\" *.ts)",
+      "Bash(sed -i \"s/theme: 'amber'/theme: 'soft-paper'/g\" *.ts)",
+      "Read(//d/SaaS/DevTools Suite/devtools-suite/public/**)",
+      "Bash(dir \"D:\\\\SaaS\\\\DevTools Suite\\\\devtools-suite\\\\public\")",
+      "Bash(Copy-Item \"D:\\\\SaaS\\\\DevTools Suite\\\\devtools-suite\\\\public\\\\logo.png\" \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\public\\\\devtools-logo.png\")",
+      "Bash(cp \"D:/SaaS/DevTools Suite/devtools-suite/public/logo.png\" \"d:/SaaS/dailyplanly/dailyplanly/public/devtools-logo.png\" && echo \"Copied\")"
+    ],
+    "additionalDirectories": [
+      "d:\\SaaS\\dailyplanly\\dailyplanly\\src\\app\\planner\\[id]",
+      "d:\\SaaS\\dailyplanly\\dailyplanly\\src\\app\\checklist\\[id]",
+      "C:\\Users\\Dell\\Downloads",
+      "D:\\SaaS\\DevTools Suite\\devtools-suite\\public"
     ]
   }
 }

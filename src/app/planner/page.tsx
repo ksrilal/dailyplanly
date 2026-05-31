@@ -93,10 +93,15 @@ function PlannerEditorInner({ id }: { id: string }) {
         case 'habit-tracker': {
           const habits = (content.habits as { label: string }[] || [])
           const days = Math.min(Number(content.days) || 7, 31)
-          const header = `<div style="display:flex;gap:2pt;margin-bottom:4pt;padding-left:70pt">${Array.from({length:days},(_,i)=>`<div style="flex:1;text-align:center;font-size:5.5pt;color:${T['--planner-text-muted']}">${i+1}</div>`).join('')}</div>`
-          const rows = habits.map(h => `<div style="display:flex;gap:2pt;margin-bottom:4pt;align-items:center">
-            <span style="font-size:8.5pt;color:${T['--planner-text-muted']};width:68pt;flex-shrink:0">${h.label}</span>
-            ${Array.from({length:days},()=>`<div style="flex:1;height:10pt;border:1pt solid ${T['--planner-border']};border-radius:1.5pt"></div>`).join('')}
+          // Scale box/font sizes to fit all days — more days = smaller boxes
+          const boxSize = days <= 7 ? '14pt' : days <= 14 ? '11pt' : days <= 21 ? '9pt' : '7.5pt'
+          const numFontSize = days <= 14 ? '6pt' : '5pt'
+          const labelWidth = days <= 14 ? '80pt' : '65pt'
+          const gap = days <= 14 ? '3pt' : '2pt'
+          const header = `<div style="display:flex;gap:${gap};margin-bottom:3pt;padding-left:${labelWidth}">${Array.from({length:days},(_,i)=>`<div style="flex:1;text-align:center;font-size:${numFontSize};color:${T['--planner-text-muted']}">${i+1}</div>`).join('')}</div>`
+          const rows = habits.map(h => `<div style="display:flex;gap:${gap};margin-bottom:3pt;align-items:center">
+            <span style="font-size:8pt;color:${T['--planner-text-muted']};width:${labelWidth};flex-shrink:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${h.label}</span>
+            ${Array.from({length:days},()=>`<div style="flex:1;height:${boxSize};border:0.75pt solid ${T['--planner-border']};border-radius:1pt"></div>`).join('')}
           </div>`).join('')
           return `${label}${header}${rows}`
         }
@@ -127,6 +132,28 @@ function PlannerEditorInner({ id }: { id: string }) {
         }
         case 'dashboard-card': {
           return `${label}<div style="text-align:center;padding:8pt 0"><div style="font-size:9pt;color:${T['--planner-text-muted']};margin-bottom:4pt">${content.title||''}</div><div style="font-size:22pt;font-weight:700;color:${T['--planner-accent']}">${content.value||''}${content.unit?` <span style="font-size:12pt">${content.unit}</span>`:''}</div>${content.note?`<div style="font-size:9pt;color:${T['--planner-text-muted']};margin-top:4pt">${content.note}</div>`:''}</div>`
+        }
+        case 'calendar-notes': {
+          const now = new Date()
+          const year = Number(content.year)||now.getFullYear()
+          const month = (Number(content.month)||now.getMonth()+1)-1
+          const MONTHS_CN = ['January','February','March','April','May','June','July','August','September','October','November','December']
+          const DAYS_CN = ['Mo','Tu','We','Th','Fr','Sa','Su']
+          const fd=(new Date(year,month,1).getDay()+6)%7
+          const dim=new Date(year,month+1,0).getDate()
+          const cells=[...Array(fd).fill(null),...Array.from({length:dim},(_,i)=>i+1)]
+          while(cells.length%7!==0)cells.push(null)
+          const notes = (content.notes as Record<number,{id:string;text:string;color:string}[]>) || {}
+          const noteBg: Record<string,string> = {yellow:'#fef08a',pink:'#fbcfe8',blue:'#bfdbfe',green:'#bbf7d0',purple:'#ddd6fe',orange:'#fed7aa'}
+          const noteBorder: Record<string,string> = {yellow:'#ca8a04',pink:'#db2777',blue:'#2563eb',green:'#16a34a',purple:'#7c3aed',orange:'#ea580c'}
+          const dhead=`<tr>${DAYS_CN.map(d=>`<th style="text-align:center;font-size:7pt;color:${T['--planner-text-muted']};padding:3pt;border-bottom:1pt solid ${T['--planner-border']}">${d}</th>`).join('')}</tr>`
+          const wrows=Array.from({length:cells.length/7},(_,w)=>`<tr>${cells.slice(w*7,w*7+7).map(d=>{
+            const dayNotes = d ? (notes[d]||[]) : []
+            const chips = dayNotes.slice(0,3).map(n=>`<div style="background:${noteBg[n.color]||'#fef08a'};border-left:2pt solid ${noteBorder[n.color]||'#ca8a04'};padding:1pt 2pt;margin-bottom:1pt;border-radius:1.5pt;font-size:5pt;color:#111;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%">${n.text.slice(0,40)}</div>`).join('')
+            const overflow = dayNotes.length>3 ? `<div style="font-size:5pt;color:${T['--planner-text-muted']}">+${dayNotes.length-3}</div>` : ''
+            return `<td style="padding:2pt;border:0.5pt solid ${T['--planner-border']};vertical-align:top;min-height:32pt;width:14%"><div style="font-size:7.5pt;font-weight:600;color:${T['--planner-text']};margin-bottom:2pt">${d??''}</div>${chips}${overflow}</td>`
+          }).join('')}</tr>`).join('')
+          return `${label}<div style="text-align:center;font-weight:600;font-size:10pt;margin-bottom:6pt">${MONTHS_CN[month]} ${year}</div><table style="width:100%;border-collapse:collapse;table-layout:fixed">${dhead}${wrows}</table>`
         }
         case 'spacer': return ''
         case 'image': return content.src ? `${label}<div style="text-align:center"><img src="${content.src}" style="max-width:100%;border-radius:4pt">${content.caption?`<div style="font-size:8pt;color:${T['--planner-text-muted']};margin-top:4pt">${content.caption}</div>`:''}</div>` : ''

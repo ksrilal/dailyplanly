@@ -38,7 +38,14 @@
       "Read(//d/SaaS/DevTools Suite/devtools-suite/public/**)",
       "Bash(dir \"D:\\\\SaaS\\\\DevTools Suite\\\\devtools-suite\\\\public\")",
       "Bash(Copy-Item \"D:\\\\SaaS\\\\DevTools Suite\\\\devtools-suite\\\\public\\\\logo.png\" \"d:\\\\SaaS\\\\dailyplanly\\\\dailyplanly\\\\public\\\\devtools-logo.png\")",
-      "Bash(cp \"D:/SaaS/DevTools Suite/devtools-suite/public/logo.png\" \"d:/SaaS/dailyplanly/dailyplanly/public/devtools-logo.png\" && echo \"Copied\")"
+      "Bash(cp \"D:/SaaS/DevTools Suite/devtools-suite/public/logo.png\" \"d:/SaaS/dailyplanly/dailyplanly/public/devtools-logo.png\" && echo \"Copied\")",
+      "Bash(grep -v \"//\")",
+      "Bash(£\\\\|£'\" src/features/tools/finance/budget-builder.ts | head -20)",
+      "Bash(grep -n \"'£\\\\|\\\\\"£\\\\|`£\\\\|£'\" src/features/tools/finance/budget-builder.ts | head -20)",
+      "Bash(sed -i \"s/looking for £X–Y/looking at the market rate for this role/\" src/features/tools/career/interview-preparation-planner.ts)",
+      "Bash(sed -i \"s/over £50 without/over a set amount without/\" src/features/tools/finance/budget-builder.ts)",
+      "Bash(sed -i \"s/save £50–£100\\\\\\\\/month/save significantly per month/\" src/features/tools/finance/budget-builder.ts)",
+      "Bash(sed -i \"s/just £50\\\\\\\\/month would/just a small amount\\\\\\\\/month would/\" src/features/tools/finance/savings-goal-planner.ts)"
     ],
     "additionalDirectories": [
       "d:\\SaaS\\dailyplanly\\dailyplanly\\src\\app\\planner\\[id]",

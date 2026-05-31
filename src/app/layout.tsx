@@ -49,6 +49,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   robots: { index: true, follow: true },
+  other: {
+    // Google AdSense verification — must be in <head> for crawler
+    'google-adsense-account': 'ca-pub-6494285872180880',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -61,9 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <DevToolsPromo />
         </ThemeProvider>
-        {/* Google AdSense */}
+        {/* Google AdSense — strategy="afterInteractive" loads after hydration, placed in <head> by Next.js */}
         <Script
-          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6494285872180880"
           crossOrigin="anonymous"
           strategy="afterInteractive"

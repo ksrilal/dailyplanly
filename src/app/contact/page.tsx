@@ -1,5 +1,5 @@
 import { PageShell } from '@/components/layout/page-shell'
-import { Mail, MessageSquare, Bug, Lightbulb } from 'lucide-react'
+import { Mail, Github, ExternalLink } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -7,78 +7,62 @@ export const metadata: Metadata = {
   description: 'Get in touch with the DailyPlanly team.',
 }
 
-const contacts = [
-  {
-    icon: MessageSquare,
-    title: 'General Enquiries',
-    description: 'Questions about DailyPlanly, how it works, or anything else.',
-    email: 'hello@dailyplanly.com',
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10',
-  },
-  {
-    icon: Bug,
-    title: 'Bug Reports',
-    description: 'Found something broken? Let us know and we\'ll fix it.',
-    email: 'bugs@dailyplanly.com',
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-  },
-  {
-    icon: Lightbulb,
-    title: 'Feature Requests',
-    description: 'Have an idea for a new template or feature? We\'d love to hear it.',
-    email: 'ideas@dailyplanly.com',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
-  },
-  {
-    icon: Mail,
-    title: 'Privacy & Legal',
-    description: 'Privacy policy questions, data requests, or legal matters.',
-    email: 'privacy@dailyplanly.com',
-    color: 'text-sky-400',
-    bg: 'bg-sky-500/10',
-  },
-]
-
 export default function ContactPage() {
   return (
-    <PageShell className="max-w-3xl py-16">
+    <PageShell className="max-w-2xl py-16">
       <div className="mb-12">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent)] mb-3">Contact</p>
         <h1 className="text-4xl font-display font-semibold text-[var(--text-primary)] mb-4">
           Get in touch
         </h1>
         <p className="text-lg text-[var(--text-muted)] leading-relaxed">
-          We're a small team. We read every message and aim to respond within 2 business days.
+          Have a question, bug report, or feature idea? Reach out — we read everything and reply promptly.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {contacts.map((c) => (
-          <a
-            key={c.email}
-            href={`mailto:${c.email}`}
-            className="group flex flex-col gap-3 p-5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5 transition-all duration-200"
-          >
-            <div className={`w-10 h-10 rounded-lg ${c.bg} flex items-center justify-center`}>
-              <c.icon className={`h-5 w-5 ${c.color}`} strokeWidth={1.75} />
-            </div>
-            <div>
-              <p className="font-semibold text-[var(--text-primary)] mb-1">{c.title}</p>
-              <p className="text-sm text-[var(--text-muted)] mb-3 leading-relaxed">{c.description}</p>
-              <p className={`text-sm font-medium ${c.color} group-hover:underline`}>{c.email}</p>
-            </div>
-          </a>
-        ))}
+      <div className="flex flex-col gap-4">
+        {/* Email */}
+        <a
+          href="mailto:devtoolssuite.dev@gmail.com"
+          className="group flex items-center gap-4 p-5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5 transition-all duration-200"
+        >
+          <div className="w-11 h-11 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0">
+            <Mail className="h-5 w-5 text-violet-400" strokeWidth={1.75} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-[var(--text-primary)] mb-0.5">Email</p>
+            <p className="text-sm text-[var(--text-muted)]">General queries, bug reports, feature ideas</p>
+            <p className="text-sm font-medium text-violet-400 mt-1 group-hover:underline truncate">
+              devtoolssuite.dev@gmail.com
+            </p>
+          </div>
+        </a>
+
+        {/* GitHub */}
+        <a
+          href="https://github.com/ksrilal/dailyplanly"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-4 p-5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5 transition-all duration-200"
+        >
+          <div className="w-11 h-11 rounded-xl bg-[var(--bg-subtle)] flex items-center justify-center shrink-0">
+            <Github className="h-5 w-5 text-[var(--text-primary)]" strokeWidth={1.75} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-[var(--text-primary)] mb-0.5">GitHub</p>
+            <p className="text-sm text-[var(--text-muted)]">Open issues, browse the source code, contribute</p>
+            <p className="text-sm font-medium text-[var(--text-muted)] mt-1 group-hover:text-[var(--text-primary)] transition-colors inline-flex items-center gap-1">
+              github.com/ksrilal/dailyplanly
+              <ExternalLink className="h-3 w-3 opacity-50" />
+            </p>
+          </div>
+        </a>
       </div>
 
-      <div className="mt-12 p-6 rounded-xl border border-[var(--border)] bg-[var(--bg-subtle)]">
+      <div className="mt-10 p-5 rounded-xl border border-[var(--border)] bg-[var(--bg-subtle)]">
         <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-          <strong className="text-[var(--text-primary)]">Response times:</strong> We typically respond within 1–2 business days.
-          For urgent bug reports affecting data loss or accessibility, we prioritise same-day response.
-          DailyPlanly is a small independent project — we appreciate your patience and every piece of feedback.
+          <strong className="text-[var(--text-primary)]">Response time:</strong> We typically reply within 1–2 business days.
+          DailyPlanly is an independent project — we appreciate your patience and every piece of feedback.
         </p>
       </div>
     </PageShell>

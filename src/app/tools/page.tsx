@@ -134,9 +134,9 @@ function ToolCard({ tool }: { tool: Tool }) {
             {tag}
           </span>
         ))}
-        {tool.hasExport && (
-          <span className="px-2 py-0.5 rounded-md border border-emerald-500/25 text-[10px] text-emerald-400">
-            export
+        {tool.featured && (
+          <span className="px-2 py-0.5 rounded-md border border-amber-500/25 text-[10px] text-amber-400">
+            featured
           </span>
         )}
       </div>

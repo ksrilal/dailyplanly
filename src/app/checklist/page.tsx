@@ -7,6 +7,7 @@ import { recordOpen } from '@/features/storage/recents'
 import { useAutoSave } from '@/features/storage/auto-save'
 import { ChecklistLayout } from '@/components/checklist-editor/checklist-layout'
 import { exportChecklistToPdf } from '@/features/export/service'
+import { StorageFullError } from '@/features/storage/workspace-db'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
@@ -27,7 +28,7 @@ function ChecklistEditorInner({ id }: { id: string }) {
 
   const { status } = useAutoSave(checklist, async (c) => { await saveChecklist(c) }, {
     onSave: () => setSaveStatus('saved'),
-    onError: () => setSaveStatus('error'),
+    onError: (err) => setSaveStatus(err instanceof StorageFullError ? 'storage-full' : 'error'),
   })
   useEffect(() => { setSaveStatus(status) }, [status, setSaveStatus])
 

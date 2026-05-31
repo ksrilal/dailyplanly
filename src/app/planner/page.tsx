@@ -11,6 +11,7 @@ import { PlannerCanvas } from '@/components/planner-editor/planner-canvas'
 import { BlockSettings } from '@/components/planner-editor/block-settings'
 import { PlannerToolbar } from '@/components/planner-editor/planner-toolbar'
 import { WorkspaceNotFoundError } from '@/features/storage/types'
+import { StorageFullError } from '@/features/storage/workspace-db'
 import { exportPlannerToPdf } from '@/features/export/service'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -34,7 +35,7 @@ function PlannerEditorInner({ id }: { id: string }) {
 
   const { status } = useAutoSave(planner, async (p) => { await savePlanner(p) }, {
     onSave: () => setSaveStatus('saved'),
-    onError: () => setSaveStatus('error'),
+    onError: (err) => setSaveStatus(err instanceof StorageFullError ? 'storage-full' : 'error'),
   })
   useEffect(() => { setSaveStatus(status) }, [status, setSaveStatus])
 

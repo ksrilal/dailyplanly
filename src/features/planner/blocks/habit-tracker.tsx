@@ -29,7 +29,7 @@ function HabitTrackerEditor({ block, onChange }: BlockEditorProps) {
       <div>
         <p className="text-xs font-medium text-[var(--text-secondary)] mb-2">Habits</p>
         {content.habits.map((habit, i) => (
-          <div key={habit.id} className="flex items-center gap-2 mb-2">
+          <div key={habit.id ?? i} className="flex items-center gap-2 mb-2">
             <input
               type="text"
               value={habit.label}
@@ -73,8 +73,8 @@ function HabitTrackerPreview({ block }: BlockPreviewProps) {
           </tr>
         </thead>
         <tbody>
-          {content.habits.map((habit) => (
-            <tr key={habit.id}>
+          {content.habits.map((habit, i) => (
+            <tr key={habit.id ?? i}>
               <td className="py-1.5 pr-3" style={{ color: 'var(--planner-text)' }}>{habit.label || 'Habit'}</td>
               {Array.from({ length: displayDays }, (_, i) => (
                 <td key={i} className="text-center">
@@ -103,8 +103,8 @@ function HabitTrackerPrint({ block }: { block: import('@/features/storage/types'
           </tr>
         </thead>
         <tbody>
-          {content.habits.map((habit) => (
-            <tr key={habit.id}>
+          {content.habits.map((habit, i) => (
+            <tr key={habit.id ?? i}>
               <td style={{ paddingRight: '12pt', paddingTop: '4pt' }}>{habit.label}</td>
               {Array.from({ length: content.days }, (_, i) => (
                 <td key={i} style={{ textAlign: 'center', paddingTop: '4pt' }}>

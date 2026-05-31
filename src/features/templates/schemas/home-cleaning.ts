@@ -1,0 +1,47 @@
+import type { Template } from '@/features/templates/types'
+
+export const homeCleaningTemplate: Template = {
+  id: 'tpl-035',
+  slug: 'home-cleaning',
+  title: 'Home Cleaning Checklist',
+  description: 'A room-by-room deep cleaning checklist covering kitchen, bathrooms, bedrooms, living areas, and utility spaces. Tackle everything systematically for a spotlessly clean home.',
+  category: 'family-home',
+  type: 'checklist',
+  featured: false,
+  tags: ['cleaning', 'home', 'chores', 'hygiene', 'household'],
+  previewImage: '/templates/previews/home-cleaning.png',
+  checklistDefaults: {
+    mode: 'simple',
+    items: [
+      { id: 'ci-hc-1', text: 'Declutter all surfaces before cleaning begins', checked: false, order: 0, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-2', text: 'Kitchen: clean hob and remove grease', checked: false, order: 1, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-3', text: 'Kitchen: wipe inside microwave', checked: false, order: 2, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-4', text: 'Kitchen: clean oven interior (monthly)', checked: false, order: 3, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-5', text: 'Kitchen: wipe all cupboard exteriors', checked: false, order: 4, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-6', text: 'Kitchen: sanitise sink and taps', checked: false, order: 5, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-7', text: 'Kitchen: wipe all countertops and backsplash', checked: false, order: 6, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-8', text: 'Kitchen: empty, clean and reorganise fridge', checked: false, order: 7, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-9', text: 'Kitchen: clean dishwasher filter', checked: false, order: 8, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-10', text: 'Kitchen: sweep and mop floor', checked: false, order: 9, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-11', text: 'Bathroom: scrub toilet (inside + outside + base)', checked: false, order: 10, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-12', text: 'Bathroom: clean shower or bath — remove soap scum', checked: false, order: 11, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-13', text: 'Bathroom: scrub sink and taps', checked: false, order: 12, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-14', text: 'Bathroom: clean mirror', checked: false, order: 13, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-15', text: 'Bathroom: mop and sanitise floor', checked: false, order: 14, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-16', text: 'Replace bathroom towels with fresh ones', checked: false, order: 15, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-17', text: 'Living room: dust all surfaces and shelves', checked: false, order: 16, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-18', text: 'Living room: clean TV screen and media unit', checked: false, order: 17, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-19', text: 'Living room: vacuum sofa cushions and under cushions', checked: false, order: 18, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-20', text: 'Living room: vacuum carpet or mop hard floor', checked: false, order: 19, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-21', text: 'Bedrooms: change bed sheets (all bedrooms)', checked: false, order: 20, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-22', text: 'Bedrooms: dust surfaces, lamps and bedside tables', checked: false, order: 21, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-23', text: 'Bedrooms: vacuum all floors', checked: false, order: 22, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-24', text: 'Hallway: sweep and mop, wipe skirting boards', checked: false, order: 23, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-25', text: 'Wipe light switches and door handles throughout', checked: false, order: 24, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-26', text: 'Empty and replace all bin liners in every room', checked: false, order: 25, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-27', text: 'Put a load of laundry on', checked: false, order: 26, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-28', text: 'Clean windows and glass doors (inside)', checked: false, order: 27, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-hc-29', text: 'Check and top up cleaning supplies', checked: false, order: 28, parentId: null, collapsed: false, depth: 0 },
+    ]
+  }
+}

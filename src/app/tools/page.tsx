@@ -8,6 +8,16 @@ import { getAllTools, getAllToolCategories } from '@/features/tools/registry'
 import { cn } from '@/lib/utils'
 import { Search, ArrowRight, Zap, TrendingUp, BookOpen, LayoutTemplate, CheckSquare } from 'lucide-react'
 import type { Tool } from '@/features/tools/types'
+import { FAQSection } from '@/components/shared/faq-section'
+
+const TOOLS_FAQ = [
+  { q: 'What are the DailyPlanly tools?', a: 'DailyPlanly tools are lightweight, browser-based productivity utilities — things like a Pomodoro timer, habit streak counter, word counter, and more. They are designed to complement your planners and checklists without needing a separate app.' },
+  { q: 'Are the tools free to use?', a: 'Yes, every tool is completely free. There are no premium tiers, no usage limits, and no ads. Open, use, and close — no account required.' },
+  { q: 'Do the tools store any of my data?', a: 'All tools run entirely in your browser. Nothing is sent to a server. Any state that needs to persist between sessions is stored locally in your browser using localStorage or IndexedDB.' },
+  { q: 'Can I use the tools offline?', a: 'Yes. After the first page load, all tools continue to work without an internet connection. This makes them reliable for travel, low-connectivity environments, or any situation where you prefer local-only software.' },
+  { q: 'How do the tools integrate with my planners and checklists?', a: 'Tools are independent utilities you can use alongside your planner or checklist session. For example, run the Pomodoro timer while working through a checklist, or use the word counter while drafting notes in a planner block.' },
+  { q: 'Will more tools be added in the future?', a: 'Yes. The tools library grows over time. If there is a small productivity utility you would find valuable alongside your daily planning workflow, it is a candidate for a future DailyPlanly tool.' },
+]
 
 // ─── Fixed promo blocks ───────────────────────────────────────────────────────
 
@@ -236,6 +246,12 @@ export default function ToolsPage() {
       <p className="text-center text-xs text-[var(--text-faint)] mt-12">
         All tools run entirely in your browser · No login · No data sent anywhere
       </p>
+
+      <FAQSection
+        items={TOOLS_FAQ}
+        subtitle="Common questions about DailyPlanly tools"
+        schemaId="tools-faq"
+      />
     </PageShell>
   )
 }

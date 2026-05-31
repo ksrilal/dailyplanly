@@ -11,7 +11,7 @@ function TimelineEditor({ block, onChange }: BlockEditorProps) {
   return (
     <div className="flex flex-col gap-2">
       {content.events.map((event, i) => (
-        <div key={event.id} className="flex items-start gap-2">
+        <div key={event.id ?? i} className="flex items-start gap-2">
           <input
             type="date"
             value={event.date}
@@ -54,8 +54,8 @@ function TimelinePreview({ block }: BlockPreviewProps) {
   return (
     <div className="p-3 flex flex-col gap-2 relative">
       <div className="absolute left-5 top-3 bottom-3 w-px" style={{ backgroundColor: 'var(--planner-border)' }} />
-      {content.events.map((event) => (
-        <div key={event.id} className="flex items-start gap-3 pl-2 relative z-10">
+      {content.events.map((event, i) => (
+        <div key={event.id ?? i} className="flex items-start gap-3 pl-2 relative z-10">
           <div className="w-3 h-3 rounded-full flex-shrink-0 mt-0.5" style={{ backgroundColor: 'var(--planner-accent)', border: '2px solid var(--planner-bg)' }} />
           <div>
             <p className="text-xs font-medium" style={{ color: 'var(--planner-text)' }}>{event.label || 'Event'}</p>
@@ -71,8 +71,8 @@ function TimelinePrint({ block }: { block: import('@/features/storage/types').Pl
   const content = block.content as TimelineContent
   return (
     <div style={{ padding: '8pt' }}>
-      {content.events.map((event) => (
-        <div key={event.id} style={{ display: 'flex', gap: '8pt', marginBottom: '8pt', alignItems: 'flex-start' }}>
+      {content.events.map((event, i) => (
+        <div key={event.id ?? i} style={{ display: 'flex', gap: '8pt', marginBottom: '8pt', alignItems: 'flex-start' }}>
           <div style={{ width: '8pt', height: '8pt', borderRadius: '50%', backgroundColor: '#333', flexShrink: 0, marginTop: '3pt' }} />
           <div>
             <p style={{ fontWeight: 600, fontSize: '10pt' }}>{event.label}</p>

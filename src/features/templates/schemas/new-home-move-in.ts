@@ -1,0 +1,46 @@
+import type { Template } from '@/features/templates/types'
+
+export const newHomeMoveInTemplate: Template = {
+  id: 'tpl-040',
+  slug: 'new-home-move-in',
+  title: 'New Home Move-In Checklist',
+  description: 'Move into your new home smoothly. This comprehensive checklist covers utilities, safety, admin, cleaning, and unpacking — everything to transform a new house into a comfortable home.',
+  category: 'family-home',
+  type: 'checklist',
+  featured: false,
+  tags: ['moving', 'new home', 'house move', 'checklist', 'home'],
+  previewImage: '/templates/previews/new-home-move-in.png',
+  checklistDefaults: {
+    mode: 'simple',
+    items: [
+      { id: 'ci-nhm-1', text: 'Collect keys and complete final walkthrough with estate agent', checked: false, order: 0, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-2', text: 'Take meter readings for electricity, gas and water', checked: false, order: 1, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-3', text: 'Change all locks on entry doors', checked: false, order: 2, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-4', text: 'Test smoke alarms and carbon monoxide detectors', checked: false, order: 3, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-5', text: 'Locate the fuse box / circuit breaker', checked: false, order: 4, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-6', text: 'Locate the water stopcock / shut-off valve', checked: false, order: 5, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-7', text: 'Locate the gas meter and emergency shut-off', checked: false, order: 6, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-8', text: 'Set up electricity account with your chosen provider', checked: false, order: 7, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-9', text: 'Set up gas account with your chosen provider', checked: false, order: 8, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-10', text: 'Register water account', checked: false, order: 9, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-11', text: 'Set up broadband / internet — book engineer if needed', checked: false, order: 10, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-12', text: 'Update home address with DVLA (driving licence and V5)', checked: false, order: 11, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-13', text: 'Update address on electoral roll', checked: false, order: 12, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-14', text: 'Update address with bank and credit cards', checked: false, order: 13, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-15', text: 'Update address with employer (HR and payroll)', checked: false, order: 14, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-16', text: 'Redirect post from old address with Royal Mail', checked: false, order: 15, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-17', text: 'Register for council tax at new address', checked: false, order: 16, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-18', text: 'Update home contents and buildings insurance', checked: false, order: 17, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-19', text: 'Deep clean the kitchen before unpacking food items', checked: false, order: 18, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-20', text: 'Clean bathrooms thoroughly before first use', checked: false, order: 19, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-21', text: 'Clean all windows inside', checked: false, order: 20, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-22', text: 'Assemble essential furniture — bed, kitchen table', checked: false, order: 21, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-23', text: 'Set up kitchen — essentials first (kettle, toaster, microwave)', checked: false, order: 22, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-24', text: 'Unpack bedrooms — make beds to sleep on night 1', checked: false, order: 23, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-25', text: 'Connect washing machine and test a cycle', checked: false, order: 24, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-26', text: 'Introduce yourself to neighbours', checked: false, order: 25, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-27', text: 'Register with a local GP (doctor)', checked: false, order: 26, parentId: null, collapsed: false, depth: 0 },
+      { id: 'ci-nhm-28', text: 'Celebrate — you\'ve moved in!', checked: false, order: 27, parentId: null, collapsed: false, depth: 0 },
+    ]
+  }
+}

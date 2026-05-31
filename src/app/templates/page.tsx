@@ -7,6 +7,17 @@ import { GalleryGrid } from '@/components/template-gallery/gallery-grid'
 import { CategoryIcon } from '@/components/ui/category-icon'
 import { cn } from '@/lib/utils'
 import { getAllTemplates, getAllCategories } from '@/features/templates/registry'
+import { FAQSection } from '@/components/shared/faq-section'
+
+const TEMPLATES_FAQ = [
+  { q: 'What kinds of templates does DailyPlanly offer?', a: 'DailyPlanly includes planner templates (daily schedules, goal trackers, habit trackers, focus blocks) and checklist templates (simple to-do lists, advanced nested checklists for projects, wellness routines, and more). New templates are added regularly.' },
+  { q: 'Can I customise a template after I open it?', a: 'Yes. Every template is fully editable once you open it in the editor. Add, remove, or reorder blocks; change the theme; update labels — the template is just a starting point, all changes are yours.' },
+  { q: 'Are templates printable and exportable as PDF?', a: 'Absolutely. Any planner or checklist — whether started from a template or from scratch — can be exported to PDF or printed directly. Portrait and landscape orientations are supported for planners.' },
+  { q: 'Do I need an account to use templates?', a: 'No account is ever needed. Click "Use This Template", customise in the editor, and export or print — no sign-up, no login, no subscription.' },
+  { q: 'How do I start from a template?', a: 'Find a template you like, click the "Use This Template" button, and the editor opens pre-filled with blocks and a theme matching the template. Your version is saved locally and independent of the original template.' },
+  { q: 'Can I use the same template multiple times?', a: 'Yes. Each time you click "Use This Template", a fresh, independent copy is created in your workspace. You can have multiple planners or checklists based on the same template without affecting each other.' },
+  { q: 'Are templates available offline?', a: 'Yes. Once a template page has loaded, the editor and export features work fully offline. Your browser caches the necessary assets, so you can create and print without an internet connection.' },
+]
 
 type PrimaryFilter = 'all' | 'featured' | 'planner' | 'checklist'
 
@@ -164,6 +175,12 @@ export default function TemplatesPage() {
       )}
 
       <GalleryGrid templates={filtered} emptyMessage={emptyMsg} />
+
+      <FAQSection
+        items={TEMPLATES_FAQ}
+        subtitle="Common questions about DailyPlanly templates"
+        schemaId="templates-faq"
+      />
     </PageShell>
   )
 }

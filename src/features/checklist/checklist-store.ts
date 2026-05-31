@@ -10,7 +10,18 @@ export async function createChecklist(fromTemplate?: Template): Promise<Checklis
     title: fromTemplate?.title ?? 'My Checklist',
     mode: fromTemplate?.checklistDefaults?.mode ?? 'simple',
     items: fromTemplate?.checklistDefaults?.items
-      ? fromTemplate.checklistDefaults.items.map((item) => ({ ...item, id: generateId() }))
+      ? (() => {
+          // Build old-id → new-id map first so parentId references stay valid
+          const idMap = new Map<string, string>()
+          for (const item of fromTemplate.checklistDefaults!.items) {
+            idMap.set(item.id, generateId())
+          }
+          return fromTemplate.checklistDefaults!.items.map((item) => ({
+            ...item,
+            id: idMap.get(item.id)!,
+            parentId: item.parentId ? (idMap.get(item.parentId) ?? null) : null,
+          })) as unknown as Checklist['items']
+        })()
       : [],
     createdAt: now,
     lastModifiedAt: now,

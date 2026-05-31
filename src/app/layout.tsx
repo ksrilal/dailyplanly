@@ -3,6 +3,7 @@ import { Inter, Lora } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
+import { DevToolsPromo } from '@/components/shared/devtools-promo'
 import '@/styles/globals.css'
 import '@/styles/print.css'
 import { SITE_NAME, SITE_DESCRIPTION, BASE_URL } from '@/lib/constants'
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
+          <DevToolsPromo />
         </ThemeProvider>
       </body>
     </html>

@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { PageShell } from '@/components/layout/page-shell'
-import { Button } from '@/components/ui/button'
 import { getAllPlanners, deletePlanner } from '@/features/planner/planner-store'
 import { getAllChecklists, deleteChecklist } from '@/features/checklist/checklist-store'
 import { removeFromRecents } from '@/features/storage/recents'
@@ -12,6 +11,18 @@ import { computeProgress } from '@/features/checklist/tree-ops'
 import type { Planner, Checklist } from '@/features/storage/types'
 import { Trash2, X, LayoutTemplate, CheckSquare, List, Pin, Search, Clock, Calendar, ArrowUpAZ, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FAQSection } from '@/components/shared/faq-section'
+import { StorageWarningBanner, StorageIndicator } from '@/components/shared/storage-warning-banner'
+
+const WORKSPACE_FAQ = [
+  { q: 'What is My Workspace?', a: 'My Workspace is your personal hub where all your saved planners and checklists appear. You can open, rename, pin, sort, or delete any workspace item from here. Everything is stored locally in your browser — no cloud, no account.' },
+  { q: 'How is my data stored?', a: 'All planners and checklists are saved in your browser\'s IndexedDB — a structured local database built into every modern browser. Data persists across sessions as long as you do not clear your browser\'s site data.' },
+  { q: 'Can I pin important workspaces so they stay at the top?', a: 'Yes. Click the pin icon on any planner or checklist card to pin it. Pinned items always appear at the top of the list regardless of sorting, so your most-used workspaces are always one click away.' },
+  { q: 'What happens if I clear my browser cache?', a: 'Clearing browser data or site storage will remove your saved planners and checklists. We recommend exporting important work as PDF before clearing your browser. Exported PDFs are yours permanently.' },
+  { q: 'How do I delete a workspace item?', a: 'Open the workspace item and use the "Delete" button in the toolbar, or use the delete option on the workspace card. You will be asked to confirm before anything is permanently removed.' },
+  { q: 'Is there a limit to how many planners or checklists I can create?', a: 'There is no artificial limit imposed by DailyPlanly. The practical limit is your browser\'s available IndexedDB storage, which is typically several hundred megabytes — enough for thousands of planners and checklists.' },
+  { q: 'Can I access my workspace on a different device?', a: 'Currently, workspaces are local to the browser and device where they were created. There is no cloud sync. To transfer work, export your planner as a PDF and open it on the other device.' },
+]
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -303,6 +314,9 @@ export default function WorkspacePage() {
 
   return (
     <PageShell>
+      {/* Storage warning — shows only when usage ≥ 70% */}
+      <StorageWarningBanner />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -318,6 +332,7 @@ export default function WorkspacePage() {
             </p>
           )}
         </div>
+        <StorageIndicator />
       </div>
 
       {/* Search + sort toolbar */}
@@ -435,6 +450,12 @@ export default function WorkspacePage() {
           Saved locally in your browser. Clearing browser storage or cache may remove saved workspaces.
         </p>
       )}
+
+      <FAQSection
+        items={WORKSPACE_FAQ}
+        subtitle="Common questions about your DailyPlanly workspace"
+        schemaId="workspace-faq"
+      />
     </PageShell>
   )
 }

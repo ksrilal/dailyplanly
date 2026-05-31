@@ -9,6 +9,14 @@ export interface TemplateCategory {
   order: number
 }
 
+// Looser block type for template definitions — content is pre-filled data,
+// not live editor state, so sub-item IDs are optional at definition time.
+export type TemplatePlannerBlock = Omit<PlannerBlock, 'content'> & { content: Record<string, unknown> }
+
+// Checklist item for templates — depth is a convenience field used in
+// template definitions to document nesting; it is stripped when loading.
+export type TemplateChecklistItem = Omit<ChecklistItem, 'status'> & { depth?: number; status?: string }
+
 export interface Template {
   id: string
   slug: string
@@ -19,16 +27,16 @@ export interface Template {
   previewImage: string
   featured: boolean
   tags: string[]
-  schemaVersion: number
+  schemaVersion?: number
   plannerDefaults?: {
-    theme: PlannerTheme
-    blocks: PlannerBlock[]
+    theme: PlannerTheme | string
+    blocks: TemplatePlannerBlock[]
     paperSize: PaperSize
     orientation: 'portrait' | 'landscape'
   }
   checklistDefaults?: {
     mode: 'simple' | 'advanced'
-    items: ChecklistItem[]
+    items: TemplateChecklistItem[]
   }
-  createdAt: string
+  createdAt?: string
 }

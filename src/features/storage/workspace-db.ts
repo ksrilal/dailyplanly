@@ -1,11 +1,36 @@
 import { getDb } from './db'
 import type { Planner, Checklist } from './types'
 
+// ─── Storage full error ───────────────────────────────────────────────────────
+
+export class StorageFullError extends Error {
+  constructor() {
+    super('Browser storage is full. Export your work as PDF and delete old workspaces to free up space.')
+    this.name = 'StorageFullError'
+  }
+}
+
+function isQuotaError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  // QuotaExceededError is the standard; DOMException name varies by browser
+  return (
+    err.name === 'QuotaExceededError' ||
+    err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+    err.message.toLowerCase().includes('quota') ||
+    err.message.toLowerCase().includes('storage')
+  )
+}
+
 // ─── Planners ────────────────────────────────────────────────────────────────
 
 export async function savePlanner(planner: Planner): Promise<void> {
-  const db = await getDb()
-  await db.put('planners', planner)
+  try {
+    const db = await getDb()
+    await db.put('planners', planner)
+  } catch (err) {
+    if (isQuotaError(err)) throw new StorageFullError()
+    throw err
+  }
 }
 
 export async function getPlanner(id: string): Promise<Planner | null> {
@@ -27,8 +52,13 @@ export async function getAllPlanners(): Promise<Planner[]> {
 // ─── Checklists ──────────────────────────────────────────────────────────────
 
 export async function saveChecklist(checklist: Checklist): Promise<void> {
-  const db = await getDb()
-  await db.put('checklists', checklist)
+  try {
+    const db = await getDb()
+    await db.put('checklists', checklist)
+  } catch (err) {
+    if (isQuotaError(err)) throw new StorageFullError()
+    throw err
+  }
 }
 
 export async function getChecklist(id: string): Promise<Checklist | null> {

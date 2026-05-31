@@ -23,7 +23,7 @@ function FocusEditor({ block, onChange }: BlockEditorProps) {
         onChange={(e) => onChange({ ...content, title: e.target.value })}
       />
       {content.items.map((item, i) => (
-        <div key={item.id} className="flex items-center gap-2">
+        <div key={item.id ?? i} className="flex items-center gap-2">
           <select
             value={item.priority}
             onChange={(e) => {
@@ -68,8 +68,8 @@ function FocusPreview({ block }: BlockPreviewProps) {
   const content = block.content as FocusContent
   return (
     <div className="p-3 flex flex-col gap-1.5">
-      {content.items.map((item) => (
-        <div key={item.id} className="flex items-center gap-2 text-sm">
+      {content.items.map((item, i) => (
+        <div key={item.id ?? i} className="flex items-center gap-2 text-sm">
           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: priorityColors[item.priority] }} />
           <span style={{ color: 'var(--planner-text)' }}>{item.label || 'Focus item'}</span>
         </div>
@@ -82,8 +82,8 @@ function FocusPrint({ block }: { block: import('@/features/storage/types').Plann
   const content = block.content as FocusContent
   return (
     <div style={{ padding: '8pt' }}>
-      {content.items.map((item) => (
-        <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '6pt', marginBottom: '6pt' }}>
+      {content.items.map((item, i) => (
+        <div key={item.id ?? i} style={{ display: 'flex', alignItems: 'center', gap: '6pt', marginBottom: '6pt' }}>
           <div style={{ width: '8pt', height: '8pt', borderRadius: '50%', backgroundColor: priorityColors[item.priority], flexShrink: 0 }} />
           <span style={{ fontSize: '10pt' }}>{item.label}</span>
         </div>

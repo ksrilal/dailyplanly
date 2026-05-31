@@ -1,79 +1,73 @@
-import { generateId } from '@/lib/utils'
-import type { Template } from '../types'
+import type { Template } from '@/features/templates/types'
 
-const weekly: Template = {
-  id: 'weekly-planner-soft-paper',
-  slug: 'weekly-planner-soft-paper',
-  title: 'Weekly Planner — Soft Paper',
-  description: 'A warm, paper-inspired weekly overview with goals, habits, and daily task sections.',
+export const weeklyPlannerTemplate: Template = {
+  id: 'tpl-002',
+  slug: 'weekly-planner',
+  title: 'Weekly Planner',
+  description: 'Plan your entire week at a glance. Set weekly goals, track daily focus areas, review habit streaks, and measure your week\'s performance with a built-in review system.',
   category: 'productivity',
   type: 'planner',
-  previewImage: '/previews/templates/weekly-planner-soft-paper.png',
   featured: true,
-  tags: ['weekly', 'planner', 'paper', 'habits', 'goals'],
-  schemaVersion: 1,
-  createdAt: '2026-05-28T00:00:00.000Z',
+  tags: ['weekly', 'goals', 'habits', 'review', 'productivity'],
+  previewImage: '/templates/previews/weekly-planner.png',
   plannerDefaults: {
-    theme: 'soft-paper',
+    theme: 'wellness-calm',
+    orientation: 'landscape',
     paperSize: 'A4',
-    orientation: 'portrait',
     blocks: [
       {
-        id: generateId(),
-        type: 'goal',
-        label: 'Week Goals',
-        width: 'full',
-        order: 0,
+        id: 'b1', type: 'goal', label: 'Weekly Goal', order: 0, width: 'half',
         content: {
-          goal: "This week's main goal",
+          goal: 'Launch the new product landing page',
           milestones: [
-            { id: generateId(), label: 'Monday priority', done: false },
-            { id: generateId(), label: 'Mid-week checkpoint', done: false },
-            { id: generateId(), label: 'Week-end goal', done: false },
-          ],
-        },
+            { label: 'Finalise copy and headlines', done: false },
+            { label: 'Complete mobile responsive design', done: false },
+            { label: 'Integrate analytics and tracking', done: false },
+            { label: 'QA test across browsers', done: false },
+            { label: 'Get sign-off from stakeholders', done: false },
+            { label: 'Deploy to production', done: false },
+            { label: 'Send launch announcement email', done: false },
+          ]
+        }
       },
       {
-        id: generateId(),
-        type: 'habit-tracker',
-        label: 'Habit Tracker',
-        width: 'full',
-        order: 1,
+        id: 'b2', type: 'dashboard-card', label: 'Week Score', order: 1, width: 'half',
+        content: { title: 'Week Productivity Score', value: '—', unit: '/ 10', note: 'Rate your week on Sunday evening' }
+      },
+      {
+        id: 'b3', type: 'table', label: 'Weekly Overview', order: 2, width: 'full',
+        content: {
+          headers: ['Day', 'Main Focus', 'Key Tasks', 'Completed'],
+          rows: [
+            ['Monday', 'Deep work — copywriting', 'Write all page sections, review brand voice', ''],
+            ['Tuesday', 'Design & development', 'Build layout, hero section, mobile breakpoints', ''],
+            ['Wednesday', 'Integration day', 'Analytics setup, form testing, CMS content', ''],
+            ['Thursday', 'QA & review', 'Cross-browser testing, stakeholder walkthrough', ''],
+            ['Friday', 'Launch prep', 'Final fixes, deployment, announcement email', ''],
+            ['Saturday', 'Catch-up & rest', 'Handle overflow, personal errands', ''],
+            ['Sunday', 'Weekly review', 'Reflect, plan next week, reset workspace', ''],
+          ]
+        }
+      },
+      {
+        id: 'b4', type: 'habit-tracker', label: 'Weekly Habits', order: 3, width: 'full',
         content: {
           habits: [
-            { id: generateId(), label: 'Exercise' },
-            { id: generateId(), label: 'Read' },
-            { id: generateId(), label: 'Meditate' },
+            { label: 'Exercise 30+ minutes' },
+            { label: 'Read before bed' },
+            { label: 'No screens after 10 PM' },
+            { label: 'Drink 8 glasses of water' },
+            { label: 'Meditate / breathwork' },
+            { label: 'Eat home-cooked meals' },
+            { label: 'Connect with a friend or family member' },
           ],
-          period: 'weekly',
-          days: 7,
-        },
+          days: 7
+        }
       },
       {
-        id: generateId(),
-        type: 'table',
-        label: 'Weekly Overview',
-        width: 'full',
-        order: 2,
-        content: {
-          headers: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          rows: [
-            ['', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', ''],
-          ],
-        },
+        id: 'b5', type: 'notes', label: 'Weekly Notes & Reflections', order: 4, width: 'full',
+        content: { lines: 6, text: '' }
       },
-      {
-        id: generateId(),
-        type: 'notes',
-        label: 'Week Notes',
-        width: 'full',
-        order: 3,
-        content: { lines: 8, text: '' },
-      },
-    ],
-  },
+    ]
+  }
 }
-
-export default weekly

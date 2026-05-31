@@ -16,7 +16,7 @@ function GoalEditor({ block, onChange }: BlockEditorProps) {
       <div>
         <p className="text-xs font-medium text-[var(--text-secondary)] mb-2">Milestones</p>
         {content.milestones.map((m, i) => (
-          <div key={m.id} className="flex items-center gap-2 mb-2">
+          <div key={m.id ?? i} className="flex items-center gap-2 mb-2">
             <input type="checkbox" checked={m.done} onChange={(e) => {
               const milestones = [...content.milestones]
               milestones[i] = { ...m, done: e.target.checked }
@@ -51,8 +51,8 @@ function GoalPreview({ block }: BlockPreviewProps) {
     <div className="p-3">
       <p className="text-sm font-medium mb-2" style={{ color: 'var(--planner-text)' }}>{content.goal || 'Goal'}</p>
       <div className="flex flex-col gap-1">
-        {content.milestones.map((m) => (
-          <div key={m.id} className="flex items-center gap-2 text-xs">
+        {content.milestones.map((m, i) => (
+          <div key={m.id ?? i} className="flex items-center gap-2 text-xs">
             <span>{m.done ? '☑' : '☐'}</span>
             <span style={{ color: m.done ? 'var(--planner-text-muted)' : 'var(--planner-text)', textDecoration: m.done ? 'line-through' : 'none' }}>
               {m.label || 'Milestone'}
@@ -73,8 +73,8 @@ function GoalPrint({ block }: { block: import('@/features/storage/types').Planne
     <div style={{ padding: '8pt' }}>
       <p style={{ fontWeight: 600, fontSize: '11pt', marginBottom: '6pt' }}>{content.goal}</p>
       {content.deadline && <p style={{ fontSize: '9pt', color: '#888', marginBottom: '6pt' }}>Deadline: {content.deadline}</p>}
-      {content.milestones.map((m) => (
-        <div key={m.id} style={{ display: 'flex', gap: '6pt', alignItems: 'center', marginBottom: '4pt', fontSize: '10pt' }}>
+      {content.milestones.map((m, i) => (
+        <div key={m.id ?? i} style={{ display: 'flex', gap: '6pt', alignItems: 'center', marginBottom: '4pt', fontSize: '10pt' }}>
           <span>{m.done ? '☑' : '☐'}</span>
           <span style={{ textDecoration: m.done ? 'line-through' : 'none' }}>{m.label}</span>
         </div>

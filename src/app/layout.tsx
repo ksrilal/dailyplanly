@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Lora } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
+import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -60,6 +61,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <DevToolsPromo />
         </ThemeProvider>
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6494285872180880"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Analytics />
       </body>
     </html>

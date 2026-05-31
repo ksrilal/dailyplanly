@@ -129,16 +129,45 @@ function GoalBlock({ block }: { block: PlannerBlock }) {
 function HabitBlock({ block }: { block: PlannerBlock }) {
   const c = block.content as HabitTrackerContent
   const days = Math.min(c.days, 31)
+
+  // Fixed label column + equal-width cells for perfect alignment
+  const LABEL_W = 72         // pt — fixed label column
+  const PAGE_INNER = 460     // pt — usable page width inside block padding
+  const cellW = Math.floor((PAGE_INNER - LABEL_W) / days)
+  const cellH = Math.min(cellW, 13)  // square-ish, never taller than 13pt
+  const numFs = cellW >= 9 ? 6 : 5   // day number font size
+
   return (
     <View style={styles.block}>
       {block.label && <Text style={styles.blockLabel}>{block.label}</Text>}
-      <View style={{ flexDirection: 'row', gap: 2, marginBottom: 4, paddingLeft: 70 }}>
-        {Array.from({ length: days }, (_, i) => <Text key={i} style={{ fontSize: 5.5, color: C.muted, width: 10, textAlign: 'center' }}>{i + 1}</Text>)}
+
+      {/* Header row: blank label cell + day numbers */}
+      <View style={{ flexDirection: 'row', marginBottom: 3, borderBottom: `0.5pt solid ${C.faint}`, paddingBottom: 3 }}>
+        <View style={{ width: LABEL_W }} />
+        {Array.from({ length: days }, (_, i) => (
+          <View key={i} style={{ width: cellW, alignItems: 'center' }}>
+            <Text style={{ fontSize: numFs, color: C.muted }}>{i + 1}</Text>
+          </View>
+        ))}
       </View>
-      {c.habits.map((habit) => (
-        <View key={habit.id} style={{ flexDirection: 'row', gap: 2, marginBottom: 4, alignItems: 'center' }}>
-          <Text style={{ ...styles.small, width: 68, flexShrink: 0 }}>{habit.label}</Text>
-          {Array.from({ length: days }, (_, i) => <View key={i} style={{ width: 10, height: 10, border: `1pt solid ${C.faint}`, borderRadius: 1.5 }} />)}
+
+      {/* Habit rows */}
+      {c.habits.map((habit, hi) => (
+        <View key={habit.id ?? hi} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+          {/* Label */}
+          <Text style={{ width: LABEL_W, fontSize: 8.5, color: C.ink }}>{habit.label}</Text>
+          {/* Checkboxes */}
+          {Array.from({ length: days }, (_, i) => (
+            <View key={i} style={{ width: cellW, alignItems: 'center' }}>
+              <View style={{
+                width: cellH,
+                height: cellH,
+                border: `0.75pt solid ${C.faint}`,
+                borderRadius: 1.5,
+                backgroundColor: 'transparent',
+              }} />
+            </View>
+          ))}
         </View>
       ))}
     </View>

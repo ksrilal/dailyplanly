@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { getRecents } from '@/features/storage/recents'
+import { getRecents, removeFromRecents } from '@/features/storage/recents'
 import { getAllChecklists } from '@/features/checklist/checklist-store'
+import { getAllPlanners } from '@/features/planner/planner-store'
 import { formatRelativeDate, cn } from '@/lib/utils'
 import { LayoutTemplate, CheckSquare, List, ArrowRight, Clock } from 'lucide-react'
 import type { RecentsEntry } from '@/features/storage/types'
@@ -54,33 +55,39 @@ export function RecentsGrid() {
 
   useEffect(() => {
     async function init() {
-      const recents = getRecents().slice(0, 4)
+      const recents = getRecents()
 
-      // Enrich checklist entries that are missing mode (legacy localStorage entries)
-      const checklistIds = recents
-        .filter((e) => e.workspaceType === 'checklist' && !e.checklistMode)
-        .map((e) => e.workspaceId)
+      try {
+        // Cross-check against IndexedDB — remove stale recents that no longer exist
+        const [allPlanners, allChecklists] = await Promise.all([getAllPlanners(), getAllChecklists()])
+        const plannerIds = new Set(allPlanners.map((p) => p.id))
+        const checklistIds = new Set(allChecklists.map((c) => c.id))
 
-      let modeMap: Record<string, 'simple' | 'advanced'> = {}
-      if (checklistIds.length > 0) {
-        try {
-          const allChecklists = await getAllChecklists()
-          for (const cl of allChecklists) {
-            if (checklistIds.includes(cl.id)) {
-              modeMap[cl.id] = cl.mode
-            }
+        const valid: typeof recents = []
+        for (const e of recents) {
+          const exists = e.workspaceType === 'planner'
+            ? plannerIds.has(e.workspaceId)
+            : checklistIds.has(e.workspaceId)
+          if (exists) {
+            valid.push(e)
+          } else {
+            removeFromRecents(e.workspaceId)
           }
-        } catch {
-          // IndexedDB unavailable — skip enrichment
         }
+
+        // Enrich with checklist mode
+        const modeMap: Record<string, 'simple' | 'advanced'> = {}
+        for (const cl of allChecklists) modeMap[cl.id] = cl.mode
+
+        const enriched: EnrichedEntry[] = valid.slice(0, 4).map((e) => ({
+          ...e,
+          resolvedMode: e.workspaceType === 'checklist' ? modeMap[e.workspaceId] : undefined,
+        }))
+        setEntries(enriched)
+      } catch {
+        // IndexedDB unavailable — show raw recents without validation
+        setEntries(recents.slice(0, 4))
       }
-
-      const enriched: EnrichedEntry[] = recents.map((e) => ({
-        ...e,
-        resolvedMode: e.workspaceType === 'checklist' ? modeMap[e.workspaceId] : undefined,
-      }))
-
-      setEntries(enriched)
     }
     init()
   }, [])

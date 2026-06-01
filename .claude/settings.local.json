@@ -45,7 +45,8 @@
       "Bash(sed -i \"s/looking for £X–Y/looking at the market rate for this role/\" src/features/tools/career/interview-preparation-planner.ts)",
       "Bash(sed -i \"s/over £50 without/over a set amount without/\" src/features/tools/finance/budget-builder.ts)",
       "Bash(sed -i \"s/save £50–£100\\\\\\\\/month/save significantly per month/\" src/features/tools/finance/budget-builder.ts)",
-      "Bash(sed -i \"s/just £50\\\\\\\\/month would/just a small amount\\\\\\\\/month would/\" src/features/tools/finance/savings-goal-planner.ts)"
+      "Bash(sed -i \"s/just £50\\\\\\\\/month would/just a small amount\\\\\\\\/month would/\" src/features/tools/finance/savings-goal-planner.ts)",
+      "Bash(node scripts/generate-sitemap.mjs)"
     ],
     "additionalDirectories": [
       "d:\\SaaS\\dailyplanly\\dailyplanly\\src\\app\\planner\\[id]",

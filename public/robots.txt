@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block personal editor and workspace pages — no indexable content
+Disallow: /planner
+Disallow: /checklist
+Disallow: /workspace
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://www.dailyplanly.com/sitemap.xml
+Host: https://www.dailyplanly.com
